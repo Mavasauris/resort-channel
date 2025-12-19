@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resort Channel</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <main class="app">
+
+    <!-- BACKGROUND -->
+    <div class="bg"></div>
+    <div class="scrim"></div>
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brandText">
+          <div id="resortName" class="resortName">Main Home</div>
+        </div>
+      </div>
+
+      <div class="clockBlock">
+        <div id="clock" class="clock">--:--</div>
+        <div id="date" class="date">---</div>
+      </div>
+    </header>
+
+    <!-- CENTER -->
+    <section class="center">
+
+      <!-- SPLASH (locked screen until PIN unlock) -->
+      <div id="splash">
+        <h1 class="greeting">Welcome Home</h1>
+        <p class="tagline" id="splashTagline">Tap unlock to choose a channel</p>
+
+        <div class="lockBox" id="lockBox">
+          <button id="unlock">Unlock</button>
+          <div id="error">Incorrect PIN</div>
+        </div>
+
+        <!-- Profile buttons appear after successful PIN -->
+        <div id="chooser" class="menuGrid">
+          <button class="menuBtn" data-profile="verhulst">Krista &amp; Mike</button>
+          <button class="menuBtn" data-profile="lori">Lori &amp; Dave</button>
+          <button class="menuBtn" data-profile="mckenzie">McKenzie</button>
+          <button class="menuBtn" data-profile="kaylia">Kaylia</button>
+          <button class="menuBtn" data-profile="mira">Mira &amp; Baby Hazel</button>
+          <button class="menuBtn" data-profile="resort">Resort Test</button>
+        </div>
+      </div>
+
+      <!-- PROFILE VIEW (shown after selecting a profile) -->
+      <div id="profileView">
+        <h1 id="greeting" class="greeting"></h1>
+        <p id="tagline" class="tagline"></p>
+
+        <!-- Profile action buttons -->
+        <div id="profileActions" class="menuGrid">
+          <button class="menuBtn" data-page="disneyHome">Disney Resort Home</button>
+          <button class="menuBtn" data-page="countdownConfig">Countdown Config</button>
+          <button class="menuBtn" data-page="countdownDisplay">Countdown Display</button>
+          <button class="menuBtn" data-page="disneyPictures">Disney Pictures</button>
+        </div>
+
+        <!-- Countdown Config modal overlay (split) -->
+        <div id="countdownOverlay" class="cdOverlay" aria-hidden="true">
+          <div class="cdCard" role="dialog" aria-modal="true" aria-label="Countdown Config">
+            <div class="cdHeader">
+              <div class="cdTitle">Date of Arrival at Disney</div>
+              <button class="cdClose" type="button">✕</button>
+            </div>
+
+            <div class="fieldRow">
+              <label class="fieldLabel" for="cdDate">Select arrival date</label>
+              <input id="cdDate" class="fieldInput" type="date" inputmode="none" />
+            </div>
+
+            <div id="cdError" class="npError" style="display:none; margin-top: 6px;">
+              Please choose a date that is today or later.
+            </div>
+
+            <div class="btnRow">
+              <button id="cdClear" class="menuBtn" type="button">Clear date</button>
+              <button id="cdSave" class="menuBtn" type="button">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FLIPCOUNTER DISPLAY -->
+      <section id="countdownSection" class="countdown-section" aria-label="Disney Arrival Countdown" hidden>
+        <div class="flipcounter">
+
+          <div class="flipcounter-top">
+            <div class="flipcounter-title">
+              <div class="flipcounter-kicker">Countdown to Disney</div>
+              <div class="flipcounter-date">Arrival: <span id="arrivalDateText">—</span></div>
+            </div>
+
+            <button id="changeDateBtn" class="flipcounter-change" type="button">Change date</button>
+          </div>
+
+          <div class="flipcounter-midband" aria-hidden="true"></div>
+
+          <div class="flipcounter-row">
+            <div class="flipcounter-digits">
+              <div class="flipcounter-tile"><span id="cdDigit1">0</span></div>
+              <div class="flipcounter-tile"><span id="cdDigit2">0</span></div>
+              <div class="flipcounter-tile"><span id="cdDigit3">0</span></div>
+            </div>
+
+            <div class="flipcounter-daysLabel">Days</div>
+          </div>
+
+          <div class="flipcounter-footer">
+            <span class="flipcounter-footerText">CITIZEN&nbsp;|&nbsp;OFFICIAL&nbsp;TIMEKEEPER OF DISNEY</span>
+          </div>
+
+        </div>
+      </section>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bottombar">
+      <div class="ticker">
+        <span id="message"></span>
+      </div>
+      <div id="note" class="smallNote"></div>
+    </footer>
+
+    <!-- HOME BUTTON -->
+    <button id="backBtn" class="backBtn" type="button" aria-label="Home">
+      <img src="assets/up-back-arrow.png" class="homeIcon" alt="Home" />
+    </button>
+
+    <!-- NUMPAD -->
+    <div id="numpadOverlay" class="overlay">
+      <div class="numpad">
+        <div class="numpadTop">
+          <div class="numpadTitle">Enter PIN</div>
+          <button id="npClose" class="npClose">✕</button>
+        </div>
+
+        <div id="npDots" class="dots">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+
+        <div class="grid">
+          <button class="key" data-k="1">1</button>
+          <button class="key" data-k="2">2</button>
+          <button class="key" data-k="3">3</button>
+          <button class="key" data-k="4">4</button>
+          <button class="key" data-k="5">5</button>
+          <button class="key" data-k="6">6</button>
+          <button class="key" data-k="7">7</button>
+          <button class="key" data-k="8">8</button>
+          <button class="key" data-k="9">9</button>
+
+          <button class="key keyFn" data-k="clear">Clear</button>
+          <button class="key" data-k="0">0</button>
+          <button class="key keyFn" data-k="back">Back</button>
+        </div>
+
+        <div id="npError" class="npError">Incorrect PIN</div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
