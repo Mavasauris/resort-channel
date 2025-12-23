@@ -1,0 +1,58 @@
+
+/* =========================
+   Mouse Memoirs 
+   ========================= */
+
+@font-face {
+  font-family: "Mouse Memoirs";
+  src:
+    url("assets/fonts/MouseMemoirs-Regular.woff2") format("woff2"),
+    url("assets/fonts/MouseMemoirs-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "WaltographUI";
+  src:
+    url("assets/fonts/WaltographUI-Bold.woff2") format("woff2"),
+    url("assets/fonts/WaltographUI-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+    font-family: 'Waltograph';
+    src: url('assets/fonts/Waltograph.woff2') format('woff2'),
+        url('assets/fonts/Waltograph.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+
+/* =========================
+   FONT STACKs
+   Insert into any element as needed
+   ========================= */
+
+/*  Option A — Mouse Memoirs 
+ 
+ font-family: "Mouse Memoirs", system-ui, sans-serif; 
+
+/*  Option B — Waltograph Bold
+
+ font-family: "WaltographBold", system-ui, sans-serif; 
+ 
+ */
+
+
+/*  Option B — Waltograph
+
+ font-family: "Waltograph", system-ui, sans-serif; 
+ 
+ */
