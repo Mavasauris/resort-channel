@@ -397,7 +397,10 @@ html, body{
   text-rendering: optimizeLegibility;
   color: rgba(255,255,255,0.92);
   text-shadow: 0 2px 12px rgba(0,0,0,0.28);
-  
+  max-width: 70vw;          /* prevents ultra-wide stretching */
+  white-space: nowrap;     /* keep on one line */
+  overflow: hidden;        /* hide overflow */
+  text-overflow: ellipsis; /* … instead of breaking layout */
 }
 
 
