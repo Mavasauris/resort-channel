@@ -387,20 +387,16 @@ html, body{
 
 #profileView .ProfileViewGreeting{
   font-family: "Waltograph", system-ui, sans-serif;
-  font-size: clamp(120px, 4.2vw, 220px);
-
-  letter-spacing: 0.03em;
-  margin: 0;
+  font-size: clamp(100px, 4.2vw,160px);
   font-weight: 400;
   font-synthesis: none;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   color: rgba(255,255,255,0.92);
   text-shadow: 0 2px 12px rgba(0,0,0,0.28);
-  max-width: 70vw;          /* prevents ultra-wide stretching */
-  white-space: nowrap;     /* keep on one line */
-  overflow: hidden;        /* hide overflow */
-  text-overflow: ellipsis; /* … instead of breaking layout */
+  margin: 20px auto;      /* center horizontally */
+  max-width: 92vw;        /* keep it inside the screen */
+  white-space: nowrap;    /* force single line */
 }
 
 
