@@ -42,19 +42,21 @@ v1.0.0 — Countdown System (STABLE Web Release)
 • Verified stable for long-running tablet/kiosk use
 
 --------------------------------------------------
-UNRELEASED / IN PROGRESS
+v1.1.0 — Disney Resort TV
 --------------------------------------------------
+Status: Released
 
-v1.1.0 — Disney Resort TV (Unreleased)
--------------------------------------
 • Resort TV page
 • Rotating hero slides
 • Background image preloading
 • Hero text separated from background
 • Resort-style visual pacing
 
-v1.2.0 — Live Weather Integration (Unreleased)
-----------------------------------------------
+--------------------------------------------------
+v1.2.0 — Live Weather Integration
+--------------------------------------------------
+Status: Released
+
 • Open-Meteo live weather (no API key)
 • Home + Disney locations
 • Timezone-aware logic
@@ -62,14 +64,9 @@ v1.2.0 — Live Weather Integration (Unreleased)
 • “Now” and “Later” forecast buckets
 • 10-minute refresh interval
 
-v1.3.0 — Kiosk Hardening (Unreleased)
-------------------------------------
-• Explicit enter/exit lifecycle cleanup
-• Timer and animation safety improvements
-• Fully Kiosk–specific behavior tuning
-• Long-run stability testing
+--------------------------------------------------
+v2.0.0 — Disney Resort TV (STABLE)
+--------------------------------------------------
+Status: Current Stable
 
---------------------------------------------------
-CURRENT STABLE VERSION
---------------------------------------------------
-v1.0.0 — Countdown System (STABLE Web Release)
+• Consolidated Resort TV experience
