@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+<defs>
+  <linearGradient id="sunFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FFD54D"/>
+    <stop offset="1" stop-color="#FFB300"/>
+  </linearGradient>
+  <linearGradient id="moonFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FFE27A"/>
+    <stop offset="1" stop-color="#FFC94D"/>
+  </linearGradient>
+  <linearGradient id="cloudFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FFFFFF"/>
+    <stop offset="1" stop-color="#EAF0FF"/>
+  </linearGradient>
+  <linearGradient id="dropFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#66B6FF"/>
+    <stop offset="1" stop-color="#2D7CFF"/>
+  </linearGradient>
+</defs>
+<style>
+  .ol{stroke:#1A2340;stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round}
+  .ol2{stroke:#1A2340;stroke-width:4.25;stroke-linecap:round;stroke-linejoin:round}
+  .shine{stroke:#FFFFFF;stroke-opacity:.45;stroke-width:3;stroke-linecap:round}
+</style>
+<path class="ol" fill="#FFD54D" d="M66 46 L52 70 H64 L56 96 L82 66 H69 Z"/>
+<path class="ol" fill="url(#dropFill)" d="M38 58c6 10 10 15 10 21 0 6-4.6 11-10 11s-10-5-10-11c0-6 4-11 10-21z"/>
+<path class="ol" fill="url(#dropFill)" d="M86 58c6 10 10 15 10 21 0 6-4.6 11-10 11s-10-5-10-11c0-6 4-11 10-21z"/>
+</svg>

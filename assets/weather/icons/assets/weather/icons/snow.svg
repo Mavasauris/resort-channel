@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+<defs>
+  <linearGradient id="sunFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FFD54D"/>
+    <stop offset="1" stop-color="#FFB300"/>
+  </linearGradient>
+  <linearGradient id="moonFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FFE27A"/>
+    <stop offset="1" stop-color="#FFC94D"/>
+  </linearGradient>
+  <linearGradient id="cloudFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#FFFFFF"/>
+    <stop offset="1" stop-color="#EAF0FF"/>
+  </linearGradient>
+  <linearGradient id="dropFill" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#66B6FF"/>
+    <stop offset="1" stop-color="#2D7CFF"/>
+  </linearGradient>
+</defs>
+<style>
+  .ol{stroke:#1A2340;stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round}
+  .ol2{stroke:#1A2340;stroke-width:4.25;stroke-linecap:round;stroke-linejoin:round}
+  .shine{stroke:#FFFFFF;stroke-opacity:.45;stroke-width:3;stroke-linecap:round}
+</style>
+<g>
+  <line class="ol" x1="32" y1="72" x2="48" y2="72"/>
+  <line class="ol" x1="40" y1="64" x2="40" y2="80"/>
+  <line class="ol" x1="34.0" y1="66.0" x2="46.0" y2="78.0"/>
+  <line class="ol" x1="34.0" y1="78.0" x2="46.0" y2="66.0"/>
+</g>
+<g>
+  <line class="ol" x1="56" y1="92" x2="72" y2="92"/>
+  <line class="ol" x1="64" y1="84" x2="64" y2="100"/>
+  <line class="ol" x1="58.0" y1="86.0" x2="70.0" y2="98.0"/>
+  <line class="ol" x1="58.0" y1="98.0" x2="70.0" y2="86.0"/>
+</g>
+<g>
+  <line class="ol" x1="80" y1="72" x2="96" y2="72"/>
+  <line class="ol" x1="88" y1="64" x2="88" y2="80"/>
+  <line class="ol" x1="82.0" y1="66.0" x2="94.0" y2="78.0"/>
+  <line class="ol" x1="82.0" y1="78.0" x2="94.0" y2="66.0"/>
+</g>
+</svg>

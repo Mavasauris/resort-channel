@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="gCloud" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F7FBFF"/>
+      <stop offset="1" stop-color="#CFE2F6"/>
+    </linearGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Cloud -->
+  <g filter="url(#softShadow)">
+    <path d="M36 66
+             C24 66 14 57 14 45
+             C14 33 24 24 36 24
+             C40 17 48 12 58 12
+             C72 12 84 22 86 36
+             C100 36 110 46 110 60
+             C110 74 100 84 86 84
+             L36 84
+             C24 84 14 74 14 66 Z"
+          fill="url(#gCloud)" stroke="#B7D0EE" stroke-width="2"/>
+  </g>
+
+  <!-- Snowflakes -->
+  <g stroke="#EAF4FF" stroke-width="3" stroke-linecap="round">
+    <g transform="translate(44 96)">
+      <line x1="-6" y1="0" x2="6" y2="0"/>
+      <line x1="0" y1="-6" x2="0" y2="6"/>
+      <line x1="-4" y1="-4" x2="4" y2="4"/>
+      <line x1="-4" y1="4" x2="4" y2="-4"/>
+    </g>
+    <g transform="translate(64 104)">
+      <line x1="-6" y1="0" x2="6" y2="0"/>
+      <line x1="0" y1="-6" x2="0" y2="6"/>
+      <line x1="-4" y1="-4" x2="4" y2="4"/>
+      <line x1="-4" y1="4" x2="4" y2="-4"/>
+    </g>
+    <g transform="translate(84 96)">
+      <line x1="-6" y1="0" x2="6" y2="0"/>
+      <line x1="0" y1="-6" x2="0" y2="6"/>
+      <line x1="-4" y1="-4" x2="4" y2="4"/>
+      <line x1="-4" y1="4" x2="4" y2="-4"/>
+    </g>
+  </g>
+</svg>

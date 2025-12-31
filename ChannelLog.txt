@@ -1,0 +1,76 @@
+CHANGELOG
+=========
+
+All notable changes are documented here.
+Dates reflect when functionality was added or stabilized,
+not when code was first experimented with.
+
+--------------------------------------------------
+Initial Foundation
+--------------------------------------------------
+• Basic SPA routing system introduced
+• PIN-based unlock screen implemented
+• Profile selection system added
+• Always-on clock and date display
+• Rotating inspirational quotes
+
+--------------------------------------------------
+Countdown System
+--------------------------------------------------
+• Per-profile Disney arrival date storage
+• Flip-style countdown digits
+• One-day mode with rotating messages
+• Arrival-day mode with fireworks
+• Post-trip mode with next-trip prompt
+• Midnight-safe day calculations
+• Countdown animation stability fixes
+• Proper cleanup when navigating away
+
+--------------------------------------------------
+Resort TV Page
+--------------------------------------------------
+• Dedicated Disney Resort TV view
+• Rotating hero slides (parks + Disney Springs)
+• Background image preloading
+• Hero text separated from background rendering
+• Fixed right-hand info rail
+• Back navigation hierarchy corrected
+
+--------------------------------------------------
+Weather (LIVE)
+--------------------------------------------------
+• Open-Meteo integration added (no API key)
+• Home + Disney locations supported
+• Timezone-aware weather parsing
+• “Now” and “Later” forecasts
+• Day/night icon switching
+• 10-minute refresh interval
+• Graceful failure handling (no UI crashes)
+
+--------------------------------------------------
+Fireworks Overlay
+--------------------------------------------------
+• Canvas-based fireworks engine
+• Mickey-shaped bursts
+• Density and performance tuning
+• Auto-start/stop based on app mode
+• High-DPI scaling support
+
+--------------------------------------------------
+Stability & Refactors
+--------------------------------------------------
+• Centralized UI element registry
+• Explicit view enter/exit lifecycle
+• Overlay isolation (numpad, countdown config)
+• Reduced DOM querying
+• Timer cleanup on navigation
+• Improved kiosk reliability
+
+--------------------------------------------------
+Current State
+--------------------------------------------------
+• Core systems stable
+• Weather fully live
+• Countdown logic finalized
+• Resort TV experience operational
+• Ready for long-running tablet deployment

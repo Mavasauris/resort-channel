@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="storm">
+  <defs>
+    <filter id="ds" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+    <linearGradient id="sunGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFD86B"/>
+      <stop offset="1" stop-color="#FFB300"/>
+    </linearGradient>
+    <linearGradient id="moonGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EAF2FF"/>
+      <stop offset="1" stop-color="#BFD4FF"/>
+    </linearGradient>
+    <linearGradient id="cloudGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EAF0FF"/>
+    </linearGradient>
+    <linearGradient id="cloudDarkGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E9EEFF"/>
+      <stop offset="1" stop-color="#C9D5FF"/>
+    </linearGradient>
+    <linearGradient id="rainGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6FD1FF"/>
+      <stop offset="1" stop-color="#2E8BFF"/>
+    </linearGradient>
+    <linearGradient id="snowGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#DFF0FF"/>
+    </linearGradient>
+    <linearGradient id="stormGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE07A"/>
+      <stop offset="1" stop-color="#FFB300"/>
+    </linearGradient>
+    <linearGradient id="iceGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#B8F0FF"/>
+      <stop offset="1" stop-color="#4FC3FF"/>
+    </linearGradient>
+  </defs>
+  <g>
+  <g><circle cx="38.70" cy="44.80" r="20.70" fill="url(#cloudDarkGrad)" filter="url(#ds)"/>
+<circle cx="64.00" cy="35.60" r="25.30" fill="url(#cloudDarkGrad)" filter="url(#ds)"/>
+<circle cx="91.60" cy="47.10" r="19.55" fill="url(#cloudDarkGrad)" filter="url(#ds)"/>
+<rect x="19.15" y="49.40" width="89.70" height="32.20" rx="20.70" fill="url(#cloudDarkGrad)" filter="url(#ds)"/></g>
+  <path d="M 58 66 L 74 66 L 64 88 L 78 88 L 54 120 L 66 96 L 54 96 Z"
+      fill="url(#stormGrad)" filter="url(#ds)"/>
+</g>
+</svg>

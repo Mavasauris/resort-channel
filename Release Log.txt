@@ -1,0 +1,75 @@
+Resort Channel Tablet App
+Version History
+=========================
+
+Versioning is milestone-based.
+Only versions explicitly marked STABLE are considered production-ready
+for unattended web / tablet kiosk use.
+
+--------------------------------------------------
+v0.1.0 — Initial Skeleton
+--------------------------------------------------
+• Splash / lock screen
+• PIN unlock flow
+• Profile chooser
+• Basic navigation
+• Clock and date display
+
+--------------------------------------------------
+v0.2.0 — Profile & Navigation
+--------------------------------------------------
+• Explicit view routing system
+• Back button hierarchy
+• Profile-based greetings and taglines
+• Quote ticker rotation
+• Overlay separation (numpad vs content)
+
+--------------------------------------------------
+v1.0.0 — Countdown System (STABLE Web Release)
+--------------------------------------------------
+• Per-profile Disney arrival date storage
+• Countdown display page
+• Flip-style number animation
+• Midnight-safe date calculations
+• Countdown configuration overlay
+• One-day mode with rotating messages
+• Arrival-day mode
+• Post-trip mode
+• Countdown animation safety guards
+• Fireworks overlay integration
+• Countdown polish and timing refinements
+• Tested as a standalone web app
+• Verified stable for long-running tablet/kiosk use
+
+--------------------------------------------------
+UNRELEASED / IN PROGRESS
+--------------------------------------------------
+
+v1.1.0 — Disney Resort TV (Unreleased)
+-------------------------------------
+• Resort TV page
+• Rotating hero slides
+• Background image preloading
+• Hero text separated from background
+• Resort-style visual pacing
+
+v1.2.0 — Live Weather Integration (Unreleased)
+----------------------------------------------
+• Open-Meteo live weather (no API key)
+• Home + Disney locations
+• Timezone-aware logic
+• Day/night icon switching
+• “Now” and “Later” forecast buckets
+• 10-minute refresh interval
+
+v1.3.0 — Kiosk Hardening (Unreleased)
+------------------------------------
+• Explicit enter/exit lifecycle cleanup
+• Timer and animation safety improvements
+• Fully Kiosk–specific behavior tuning
+• Long-run stability testing
+
+--------------------------------------------------
+CURRENT STABLE VERSION
+--------------------------------------------------
+v1.0.0 — Countdown System (STABLE Web Release)
