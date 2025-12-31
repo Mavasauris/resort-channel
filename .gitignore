@@ -1,0 +1,14 @@
+﻿# OS / junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+*.log
+
+# Node / tooling
+node_modules/
+
+# Secrets
+.env
