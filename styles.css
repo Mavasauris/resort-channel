@@ -1,1063 +1,1304 @@
+/* styles.css */
 /* =========================================================
    Resort Channel — tablet-first (16:10 friendly)
-   CLEANED / DEDUPED
+   CLEAN + COMPLETE (with Cascade Layers — no fighting by location)
    ========================================================= */
 
-/* Pages default hidden via [hidden] attribute */
-#splash[hidden],
-#chooser[hidden],
-#profileView[hidden],
-#countdownSection[hidden]{
-  display: none !important;
-}
-
-
-
-
+@layer base, views;
 
 /* =========================
-   Fonts
+   BASE
    ========================= */
-@font-face {
-  font-family: "Waltograph";
-  src: url("assets/fonts/Waltograph.woff2") format("woff2"),
-       url("assets/fonts/Waltograph.woff") format("woff");
-  font-style: normal;
-  font-display: swap;
-}
+@layer base {
 
-@font-face {
-  font-family: "WaltographUI";
-  src: url("assets/fonts/WaltographUI-Bold.woff2") format("woff2"),
-       url("assets/fonts/WaltographUI-Bold.woff") format("woff");
-  font-weight: bold;
-  font-style: normal;
-  font-display: swap;
-}
+  /* Pages default hidden via [hidden] attribute */
+  #splash[hidden],
+  #chooser[hidden],
+  #profileView[hidden],
+  #countdownSection[hidden],
+  #resortTV[hidden]{
+    display: none;
+  }
 
-* { box-sizing: border-box; }
+  /* =========================
+     Fonts
+     ========================= */
+  @font-face {
+    font-family: "Waltograph";
+    src: url("assets/fonts/Waltograph.woff2") format("woff2"),
+         url("assets/fonts/Waltograph.woff") format("woff");
+    font-style: normal;
+    font-display: swap;
+  }
 
-:root{
-  /* Layout */
-  --topbar-h: 110px;
-  --content-max: 900px;
+  @font-face {
+    font-family: "WaltographUI";
+    src: url("assets/fonts/WaltographUI-Bold.woff2") format("woff2"),
+         url("assets/fonts/WaltographUI-Bold.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
 
-  /* Home button reservation (footer safe area) */
-  --home-btn-size: 128px;
-  --home-btn-gap: 24px;
-  --footer-safe-left: calc(var(--home-btn-size) + var(--home-btn-gap));
+  * { box-sizing: border-box; }
 
-  /* UI */
-  --radius-lg: 24px;
-  --radius-md: 18px;
-  --radius-sm: 14px;
+  :root{
+    /* Layout */
+    --topbar-h: 110px;
+    --content-max: 900px;
 
-  --border-soft: rgba(255,255,255,0.18);
-  --border-btn:  rgba(255,255,255,0.20);
+    /* Home button reservation (footer safe area) */
+    --home-btn-size: 128px;
+    --home-btn-gap: 24px;
+    --footer-safe-left: calc(var(--home-btn-size) + var(--home-btn-gap));
+    --footer-safe-right: 16px;
 
-  --text-strong: rgba(255,255,255,0.96);
-  --text-soft:   rgba(255,255,255,0.82);
+    /* UI */
+    --radius-lg: 24px;
+    --radius-md: 18px;
+    --radius-sm: 14px;
 
-  /* Countdown / FlipCounter sizing system */
-  --fc-pad: 18px;
-  --fc-gap: 18px;
-  --tile-w: 190px;
-  --tile-h: 240px;
-  --digit-size: 240px;
-  --days-size: 85px;
-  --seam-h: 9px;
-  --section-width: min(860px, 92vw);
+    --border-soft: rgba(255,255,255,0.18);
+    --border-btn:  rgba(255,255,255,0.20);
 
-  /* Button system */
-  --btn-width: 480px;
-}
+    --text-strong: rgba(255,255,255,0.96);
+    --text-soft:   rgba(255,255,255,0.82);
 
-html, body{
-  margin: 0;
-  height: 100%;
-  background: #000;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  color: #fff;
-}
+    /* Countdown / FlipCounter sizing system */
+    --fc-pad: 18px;
+    --fc-gap: 18px;
+    --tile-w: 190px;
+    --tile-h: 240px;
+    --digit-size: 240px;
+    --days-size: 85px;
+    --seam-h: 9px;
+    --section-width: min(860px, 92vw);
 
-.app{
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-}
+    /* Button system */
+    --btn-width: 480px;
 
-/* =========================
-   Background
-   ========================= */
-.bg{
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #2b7ddc, #040161);
-  pointer-events: none;
-}
+    /* Rail */
+    --rail-width: 310px;
+  }
 
-.bg::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background: radial-gradient(circle at 50% 55%, rgba(255,255,255,0.06), transparent 60%);
-  pointer-events:none;
-}
+  html, body{
+    margin: 0;
+    height: 100%;
+    background: #000;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #fff;
+  }
 
-.scrim{
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  pointer-events: none;
-}
+  .app{
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
 
-/* =========================
-   Layout / Bars
-   ========================= */
-.topbar{
-  position: relative;
-  z-index: 5;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: start; /* FIX: "top" isn't valid */
-  padding: 20px;
-  height: var(--topbar-h);
-}
+  /* =========================
+     Background
+     ========================= */
+  .bg{
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #2b7ddc, #040161);
+    pointer-events: none;
+  }
 
-.pageText{
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
+  .bg::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: radial-gradient(circle at 50% 55%, rgba(255,255,255,0.06), transparent 60%);
+    pointer-events:none;
+  }
 
-.resortName{
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-  opacity: 0.78;
-}
+  .scrim{
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    pointer-events: none;
+  }
 
-/* Top-center system message (note) */
-.systemMessage{
-  font-size: 48px;
-  opacity: 0;
-  transform: translateY(8px);
-}
+  /* =========================
+     Layout / Bars
+     ========================= */
+  .topbar{
+    position: relative;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: start;
+    padding: 20px;
+    height: var(--topbar-h);
+  }
 
-/* Fade IN */
-.systemMessage.fade-in{
-  animation: fadeInUp 0.6s ease-out forwards;
-}
+  .pageText{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
 
-/* Fade OUT */
-.systemMessage.fade-out{
-  animation: fadeOutUp 0.6s ease-in forwards;
-}
+  .resortName{
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    opacity: 0.78;
+  }
 
-/* COMPAT: your JS currently toggles fade classes on .oneDayMessage */
-.oneDayMessage.fade-in{
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-.oneDayMessage.fade-out{
-  animation: fadeOutUp 0.6s ease-in forwards;
-}
+  /* Top-center system message (note) */
+  .systemMessage{
+    font-size: 48px;
+    opacity: 0;
+    transform: translateY(8px);
+  }
 
-@keyframes fadeInUp{
-  from{ opacity: 0; transform: translateY(8px); }
-  to{ opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeOutUp{
-  from{ opacity: 1; transform: translateY(0); }
-  to{ opacity: 0; transform: translateY(-8px); }
-}
+  .systemMessage.fade-in{ animation: fadeInUp 0.6s ease-out forwards; }
+  .systemMessage.fade-out{ animation: fadeOutUp 0.6s ease-in forwards; }
 
-.clockBlock{ text-align: right; }
+  .oneDayMessage.fade-in{ animation: fadeInUp 0.6s ease-out forwards; }
+  .oneDayMessage.fade-out{ animation: fadeOutUp 0.6s ease-in forwards; }
 
-.clock{
-  font-size: 48px;
-  font-weight: 900;
-  letter-spacing: 0.01em;
-  line-height: 46px;
-}
+  @keyframes fadeInUp{
+    from{ opacity: 0; transform: translateY(8px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeOutUp{
+    from{ opacity: 1; transform: translateY(0); }
+    to{ opacity: 0; transform: translateY(-8px); }
+  }
 
-.day,
-.date{
-  font-family: "WaltographUI", system-ui, sans-serif;
-  font-size: 24px;
-  line-height: 28px;
-  font-weight: 850;
-  opacity: 0.95;
-}
+  .clockBlock{ text-align: right; }
 
-.daySuffix {
-  font-size: 0.6em;
-  vertical-align: super;
-  margin-left: 2px;
-  opacity: 0.85;
-}
+  .clock{
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    line-height: 46px;
+  }
 
-/* Main center area */
-.center{
-  position: relative;
-  z-index: 4;
-  height: calc(100% - var(--topbar-h));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  .day,
+  .date{
+    font-family: "WaltographUI", system-ui, sans-serif;
+    font-size: 24px;
+    line-height: 28px;
+    font-weight: 850;
+    opacity: 0.95;
+  }
 
-  padding-top: 6vh;
-  margin-top: -10vh;
-}
+  .daySuffix {
+    font-size: 0.6em;
+    vertical-align: super;
+    margin-left: 2px;
+    opacity: 0.85;
+  }
 
-/* =========================
-   Bottom Bar / Quote / Ticker
-   ========================= */
-.bottombar{
-  position: absolute;
-  bottom: 6px;
-  left: 0;
-  right: 0;
-  padding: 10px 16px;
-  z-index: 5;
-}
+  /* Main center area */
+  .center{
+    position: relative;
+    z-index: 4;
+    height: calc(100% - var(--topbar-h));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 6vh;
+    margin-top: -10vh;
+  }
 
-/* Center the ticker while reserving space for home button on left */
-.bottombar .ticker{
-  position: fixed;
-  left: 50%;
-  bottom: 8px;
-  transform: translateX(-50%);
-  width: min(960px, calc(92vw - var(--footer-safe-left)));
-  text-align: center;
-}
+  /* Let the page host behave like a full-screen stage */
+  #pageHost{
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
 
-#message{
-  white-space: pre-line;
-  text-align: center;
-}
+  /* =========================
+     Bottom Bar / Quote / Ticker
+     ========================= */
+  .bottombar{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 6px;
+    padding: 10px 16px;
+    z-index: 5;
+  }
 
-/* Clamp to 2 lines */
-.bottombar .ticker #message {
-  font-size: clamp(26px, 2.2vw, 32px);
-  font-weight: 600;
-  line-height: 1.3;
+  .bottombar .ticker{
+    margin-left: var(--footer-safe-left);
+    margin-right: var(--footer-safe-right);
+    width: auto;
+    text-align: center;
+  }
 
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  overflow: hidden;
-}
+  #message{
+    white-space: pre-line;
+    text-align: center;
+  }
 
-/* =========================
-   Splash text
-   ========================= */
+  /* Clamp to 2 lines */
+  .bottombar .ticker #message {
+    font-size: clamp(26px, 2.2vw, 32px);
+    font-weight: 600;
+    line-height: 1.3;
 
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+  }
 
-.greeting{
-  font-family: "Waltograph", system-ui, sans-serif;
-  font-size: clamp(200px, 4.2vw, 250px);
-  letter-spacing: 0.03em;
-  margin: 0;
-  font-weight: 400;
-  font-synthesis: none;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  color: rgba(255,255,255,0.92);
-  text-shadow: 0 2px 12px rgba(0,0,0,0.28);
-}
+  /* =========================
+     Splash text
+     ========================= */
+  .greeting{
+    font-family: "Waltograph", system-ui, sans-serif;
+    font-size: clamp(200px, 4.2vw, 250px);
+    letter-spacing: 0.03em;
+    margin: 0;
+    font-weight: 400;
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.28);
+  }
 
-.tagline{
-   text-align: center;
-  font-size: clamp(8px, 2.4vw, 28px);
-  opacity: 0.78;
-  letter-spacing: 0.01em;
-  margin-top: 2px;
-}
+  .tagline{
+    text-align: center;
+    font-size: clamp(8px, 2.4vw, 28px);
+    opacity: 0.78;
+    letter-spacing: 0.01em;
+    margin-top: 2px;
+  }
 
-.lockBox{ margin-top: 60px; }
+  .lockBox{ margin-top: 60px; }
 
-#unlock{
+  #unlock{
     scale: 2.5;
-  padding: px 18px;
-  font-size: 18px;
-}
+    padding: 12px 18px;
+    font-size: 18px;
+  }
 
-#error{
-  display: none;
-  color: #ff9999;
-  margin-top: 8px;
-}
+  #error{
+    display: none;
+    color: #ff9999;
+    margin-top: 8px;
+  }
+
+  /* =========================
+     Unified button grid + style
+     ========================= */
+  .menuGrid{
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 12px;
+    margin: 30px auto 0;
+    width: fit-content;
+    justify-items: center;
+    align-items: center;
+  }
+
+  /* Profile actions ONLY = 1 column */
+  #profileView .menuGrid{ grid-template-columns: 1fr; }
+
+  /* Splash menu hidden until unlocked */
+  #splash .menuGrid--welcome{ display: none; }
+
+  .menuBtn{
+    width: var(--btn-width);
+    padding: 18px 18px;
+    border-radius: var(--radius-md);
+    font-size: 22px;
+    font-weight: 850;
+    letter-spacing: 0.02em;
+
+    border: 1px solid var(--border-btn);
+    background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
+    color: var(--text-strong);
+
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.22),
+      0 10px 24px rgba(0,0,0,0.28);
+
+    cursor: pointer;
+    text-align: center;
+    transition: transform 100ms ease, background 180ms ease, box-shadow 180ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .menuBtn:hover{
+    background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.12));
+  }
+
+  .menuBtn:active{
+    transform: scale(0.985);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.20),
+      0 6px 18px rgba(0,0,0,0.26);
+  }
+
+  /* =========================
+     Chooser View
+     ========================= */
+  #chooser{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    min-height: 62vh;
+    white-space: nowrap;
+  }
+
+  /* =========================
+     Profile View
+     ========================= */
+  #profileView{
+    width: 100%;
+    margin: 0 auto;
+    min-height: 62vh;
+    flex-direction: column;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  #profileView .ProfileViewGreeting{
+    font-family: "Waltograph", system-ui, sans-serif;
+    font-size: clamp(100px, 4.2vw,160px);
+    font-weight: 400;
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.28);
+    margin: 20px auto;
+    max-width: 92vw;
+    white-space: nowrap;
+  }
+
+  #profileActions{
+    margin-top: 18px;
+    width: min(520px, 92vw);
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 6px;
+  }
+
+  /* =========================
+     Home Button
+     ========================= */
+  .backBtn{
+    position: absolute;
+    left: 16px;
+    bottom: 8px;
+    width: var(--home-btn-size);
+    height: var(--home-btn-size);
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(0,0,0,0.35);
+    opacity: 0.65;
+    display: none;
+    cursor: pointer;
+    z-index: 50;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    padding: 0;
+
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.10),
+      0 14px 30px rgba(0,0,0,0.30);
+  }
+
+  .backBtn::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    background: rgba(255,255,255,0.18);
+    opacity: 0;
+    transition: opacity 120ms ease;
+    pointer-events:none;
+  }
+
+  .homeIcon{
+    position:absolute;
+    width: 130px;
+    height:auto;
+    left:50%;
+    top:50%;
+    transform: translate(-50%, -50%) translateX(-4px);
+    pointer-events:none;
+  }
+
+  /* =========================
+     Numpad Overlay
+     ========================= */
+  .overlay{
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.65);
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  .overlay.show{
+    display:flex;
+    pointer-events:auto;
+  }
+
+  .numpad{
+    background:#111;
+    padding: 18px;
+    border-radius: var(--radius-md);
+    width: 320px;
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 18px 44px rgba(0,0,0,0.45);
+  }
+
+  .dots{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin: 10px 0;
+  }
+
+  .dot{
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.20);
+  }
+
+  .dot.filled{ background:#fff; }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:10px;
+  }
+
+  .key{
+    padding:16px;
+    font-size:18px;
+    background: rgba(255,255,255,0.10);
+    border:none;
+    color:#fff;
+    border-radius: 12px;
+    transition: transform 80ms ease, background 120ms ease;
+  }
+
+  .key:active{
+    transform: scale(0.96);
+    background: rgba(255,255,255,0.18);
+  }
+
+  .keyFn{ font-size:14px; }
+
+  .npError{
+    color:#ff9999;
+    text-align:center;
+    margin-top:10px;
+    font-weight: 700;
+  }
+
+  [hidden] { display: none !important; }
+
+  /* =========================
+     Countdown Config Modal
+     ========================= */
+  .cdOverlay{
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    background: rgba(0,0,0,0.65);
+    z-index: 999;
+    pointer-events: none;
+  }
+
+  .cdOverlay.show{
+    display:flex;
+    pointer-events: auto;
+  }
+
+  .cdCard{
+    width: min(620px, 96vw);
+    background: rgba(15,15,15,0.94);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: var(--radius-lg);
+    padding: 30px 32px;
+    box-shadow: 0 18px 44px rgba(0,0,0,0.45);
+    pointer-events: auto;
+  }
+
+  .cdHeader{
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .cdTitle{
+    grid-column: 2;
+    text-align:center;
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: 0.2px;
+    pointer-events:none;
+  }
+
+  .cdClose{
+    grid-column: 3;
+    justify-self: end;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.20);
+    background: rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.95);
+    cursor: pointer;
+    font-size: 22px;
+    position: relative;
+    z-index: 5;
+  }
+
+  .cdClose:active{ transform: translateY(1px); }
+
+  #countdownOverlay[data-mode="change"] #cdClear{ display:none !important; }
+  #countdownOverlay:not([data-mode="change"]) #cdClear{ display:inline-block; }
+
+  .fieldRow{
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    align-items: center;
+    gap: 22px;
+    margin: 18px 0;
+    padding: 18px 20px;
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+
+  .fieldLabel{
+    font-size: 24px;
+    opacity: 0.92;
+  }
+
+  .fieldInput{
+    width: auto;
+    height: 56px;
+    margin: 0 auto;
+    padding: 0 10px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.22);
+    background: rgba(0,0,0,0.30);
+    color: rgba(255,255,255,0.95);
+    justify-self: center;
+    font-size: 24px;
+    text-align: center;
+    align-self: center;
+  }
+
+  .btnRow{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 24px;
+    width: 100%;
+  }
+
+  .btnRow .cdBtn{
+    width: 100%;
+    padding: 14px 14px;
+    font-size: clamp(18px, 2.8vw, 26px);
+    font-weight: 900;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255,255,255,0.20);
+    background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
+    color: rgba(255,255,255,0.96);
+
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #countdownOverlay[data-mode="change"] #cdSave{
+    grid-column: 2;
+  }
+
+  /* =========================
+     Profile Backgrounds
+     ========================= */
+  .app.profile-verhulst .bg{
+    background-image: url("assets/bg-verhulst.webp");
+    background-size: cover;
+    background-position: center;
+  }
+  .app.profile-lori .bg{
+    background-image: url("assets/bg-lori.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+  .app.profile-mckenzie .bg{
+    background-image: url("assets/bg-mckenzie.png");
+    background-size: cover;
+    background-position: center;
+  }
+  .app.profile-kaylia .bg{
+    background-image: url("assets/bg-kaylia.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+  .app.profile-mira .bg{
+    background-image: url("assets/bg-mira.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+  .app.profile-resort .bg{
+    background-image: url("assets/bg-resort.jpg");
+    background-size: cover;
+    background-position: center;
+  }
+  .app[class*="profile-"] .scrim{
+    background: rgba(0,0,0,0.45);
+  }
+
+  /* =========================
+     Countdown Mode Backgrounds
+     ========================= */
+  .app.countdown-mode .bg{
+    background-image: url("assets/saratoga-bkgd.png");
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+  }
+
+  .app.countdown-mode.one-day-mode .bg{
+    background-image: url("assets/one-day-bkgd.webp");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  .app.countdown-mode #greeting,
+  .app.countdown-mode #tagline,
+  .app.countdown-mode #profileActions{
+    display:none !important;
+  }
+
+  /* =========================
+     Countdown Display (FlipCounter)
+     ========================= */
+  .countdown-section{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    width: var(--section-width);
+    padding: 5px;
+  }
+
+  .flipcounter{
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    padding: var(--fc-pad);
+    background: linear-gradient(180deg, rgba(30,120,255,0.65), rgba(35,95,220,0.50));
+    border: 1px solid rgba(255,255,255,0.22);
+    box-shadow: 0 16px 34px rgba(0,0,0,0.22);
+    min-height: 340px;
+  }
+
+  .flipcounter-top{
+    position: relative;
+    z-index: 2;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .flipcounter-kicker{
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  .flipcounter-date{
+    margin-top: 4px;
+    opacity: 0.9;
+    font-size: 16px;
+  }
+
+  .flipcounter-change{
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.95);
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .flipcounter-midband{
+    position:absolute;
+    left:0;
+    right:0;
+    top:85px;
+    height:265px;
+    background: rgba(0,0,0,0.16);
+  }
+
+  .flipcounter-row{
+    position: relative;
+    z-index: 2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: var(--fc-gap);
+    padding: 18px 12px 12px;
+  }
+
+  .flipcounter-digits{
+    display:flex;
+    gap: 12px;
+  }
+
+  .flipcounter-tile{
+    position: relative;
+    overflow: hidden;
+    width: var(--tile-w);
+    height: var(--tile-h);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.98);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.28);
+    display: grid;
+    place-items: center;
+  }
+
+  .flipcounter-tile::after{
+    content:"";
+    position:absolute;
+    left:5px;
+    right:5px;
+    top:50%;
+    height: var(--seam-h);
+    transform: translateY(-10px);
+    background: rgba(0,0,0,0.90);
+    border-radius: 3px;
+    pointer-events:none;
+  }
+
+  .flipcounter-tile span{
+    display:block;
+    width:100%;
+    text-align:center;
+    font-size: var(--digit-size);
+    font-weight: 900;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+    color: rgba(5,30,55,0.95);
+  }
+
+  .flipcounter-daysLabel{
+    font-size: var(--days-size);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.2px;
+    color: rgba(255,255,255,0.95);
+    padding-right: 6px;
+  }
+
+  .flipcounter-footer{
+    position: relative;
+    z-index: 2;
+    background: rgba(0,0,0,0.14);
+    padding: 10px 14px;
+    text-align:center;
+    border-radius: 14px;
+    margin-top: 10px;
+  }
+
+  .flipcounter-footerText{
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 0.9px;
+    color: rgba(255,255,255,0.92);
+  }
+
+  /* =========================
+     One-Day / Arrival / Post-trip
+     ========================= */
+  .app.countdown-mode .scrim { background: rgba(0,0,0,0.25); }
+  .app.countdown-mode.one-day-mode .scrim { background: rgba(0,0,0,0.15); }
+
+  .app.countdown-mode.one-day-mode .flipcounter {
+    display: none !important;
+  }
+
+  .oneDayMessage{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 20;
+
+    --lift: -220px;
+    --in: 700ms;
+    --hold: 3500ms;
+    --out: 700ms;
+
+    max-width: 980px;
+    min-width: 750px;
+    line-height: 1.35;
+    text-align: center;
+    white-space: normal;
+
+    font-family: "WaltographUI", system-ui, sans-serif;
+    font-size: clamp(64px, 3.8vw, 72px);
+    font-weight: 900;
+    letter-spacing: 0.06em;
+
+    color: rgba(255,255,255,0.96);
+    text-shadow:
+      0 4px 18px rgba(0,0,0,0.45),
+      0 0 22px rgba(255,255,255,0.35);
+
+    transform: translate(-50%, -50%) translateY(var(--lift));
+
+    opacity: 0;
+    animation: oneDayInOut calc(var(--in) + var(--hold) + var(--out)) ease-in-out infinite;
+    will-change: transform, opacity;
+
+    display: none;
+  }
+
+  .app.countdown-mode.one-day-mode .oneDayMessage{
+    display: block;
+  }
+
+  .app.arrival-day-mode .oneDayMessage{
+    display: block;
+    animation: none;
+    opacity: 1;
+  }
+
+  .app.arrival-day-mode .flipcounter{
+    display: none !important;
+  }
+
+  @keyframes oneDayInOut{
+    0%{
+      opacity: 0;
+      transform: translate(-50%, -50%) translateY(calc(var(--lift) + 16px)) scale(0.985);
+    }
+    12%{
+      opacity: 1;
+      transform: translate(-50%, -50%) translateY(var(--lift)) scale(1);
+    }
+    78%{
+      opacity: 1;
+      transform: translate(-50%, -50%) translateY(var(--lift)) scale(1);
+    }
+    100%{
+      opacity: 0;
+      transform: translate(-50%, -50%) translateY(calc(var(--lift) - 10px)) scale(0.99);
+    }
+  }
+
+  /* =========================
+     Fireworks canvas overlay
+     ========================= */
+  #fireworksCanvas{
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    background: transparent;
+    z-index: 9999;
+  }
+
+  .app.arrival-day-mode .bg{
+    background-image: url("assets/one-day-bkgd.webp");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  .flipcounter-tile.is-flipping{
+    animation: tileFlipUp 220ms ease-out;
+    transform-origin: 50% 70%;
+  }
+
+  @keyframes tileFlipUp{
+    0%   { transform: translateY(6px) rotateX(0deg); }
+    40%  { transform: translateY(0px) rotateX(-14deg); }
+    100% { transform: translateY(0px) rotateX(0deg); }
+  }
+
+  .app.post-trip-mode .bg{
+    background-image: url("assets/bg-welcome-home.png");
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+  }
+
+  .app.post-trip-mode .scrim{
+    background: rgba(0,0,0,0.40);
+  }
+
+  .app.post-trip-mode .oneDayMessage{
+    display: block;
+    animation: none;
+    opacity: 1;
+    font-size: clamp(54px, 3.2vw, 64px);
+  }
+
+  /* ==============================
+     RESORT TV PAGE (base styling)
+     ============================== */
+  #resortTV{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .page.resortTV{
+    height: 100%;
+  }
+
+  .resortTV-grid{
+    display: grid;
+    grid-template-columns: 1fr var(--rail-width);
+    height: 100%;
+  }
+
+  .resortTV-hero{
+    position: relative;
+    display: block;
+    overflow: hidden;
+  }
+
+  /* Right rail */
+  .resortTV-rail{
+    justify-content: flex-start;
+    height: 100%;
+    padding: 22px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+
+background:
+  /* subtle blue/purple wave highlight */
+  radial-gradient(
+    circle at 25% 8%,
+    rgba(120,160,255,0.22),
+    transparent 60%
+  ),
+
+  /* main vertical gradient: maroon → plum → deep blue */
+  linear-gradient(
+    180deg,
+    #8a2f45 0%,
+    #6a2b4f 38%,
+    #3b2a5e 68%,
+    #1c2444 100%
+  );
 
 
+    border-left: 1px solid rgba(255,255,255,0.14);
+    box-shadow: -18px 0 40px rgba(0,0,0,0.25);
+  }
 
-/* =========================
-   Unified button grid + style
-   ========================= */
-.menuGrid{
-  display: grid;
-  grid-template-columns: repeat(2, auto);
-  gap: 12px;
-  margin: 0 auto;
-  width: fit-content;
-  justify-items: center;
-  align-items: center;
-}
+  .rail-brand{
+    width: 74%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -18px;
+    margin-bottom: -5px;
+  }
 
+  .rail-brandLogo{
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0.95;
+    padding-bottom: 2px;
+  }
 
-/* Profile actions ONLY = 1 column */
-#profileView .menuGrid{ grid-template-columns: 1fr; }
+  .rail-divider{
+    width: 100%;
+    height: 2px;
+    background: rgba(255,255,255,0.35);
+    margin: 2px 0;
+  }
 
-/* Splash menu hidden until unlocked */
-#splash .menuGrid--welcome{ display: none; }
+  /* WEATHER */
+  .rail-weatherWrap{
+    width: 100%;
+    padding: 6px 0 8px;
+  }
 
-/* Premium touch buttons */
-.menuBtn{
-  width: var(--btn-width);
-  padding: 18px 18px;
-  border-radius: var(--radius-md);
-  font-size: 22px;
-  font-weight: 850;
-  letter-spacing: 0.02em;
+  .rail-metaRow{
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 2px;
+  }
 
-  border: 1px solid var(--border-btn);
-  background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
-  color: var(--text-strong);
+  .rail-metaLeft,
+  .rail-metaRight{
+    font-size: 22px;
+    font-weight: 800;
+    opacity: 0.95;
+    white-space: nowrap;
+  }
 
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.22),
-    0 10px 24px rgba(0,0,0,0.28);
+  .rail-thinRule{
+    width: 100%;
+    height: 2px;
+    margin: 2px 0 4px;
+    background: rgba(255,255,255,0.22);
+  }
 
-  cursor: pointer;
-  text-align: center;
-  transition: transform 100ms ease, background 180ms ease, box-shadow 180ms ease;
-  -webkit-tap-highlight-color: transparent;
-}
+  .rail-weather2col{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    column-gap: 16px;
+    align-items: start;
+  }
 
-.menuBtn:hover{
-  background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.12));
-}
+  .rail-vRule{
+    width: 1px;
+    height: 100%;
+    background: rgba(255,255,255,0.18);
+    justify-self: center;
+  }
 
-.menuBtn:active{
-  transform: scale(0.985);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.20),
-    0 6px 18px rgba(0,0,0,0.26);
-}
+  .rail-colTitle{
+    text-align: center;
+    font-size: 30px;
+    font-weight: 900;
+    opacity: 0.98;
+  }
 
-/* =========================
-   Chooser View
-   ========================= */
-/* Chooser page layout */
-#chooser{
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
-  min-height: 62vh;
-  flex-direction: column;
-  white-space: nowrap;
-}
+  .rail-itemLabel{
+    font-size: 18px;
+    font-weight: 800;
+    opacity: 0.92;
+  }
 
-
-
-#chooserActions{
-  margin-top: 18px;
-  width: min(520px, 92vw);
-  margin-left: auto;
-  margin-right: auto;
-  padding-bottom: 6px;
-}
-
-
-/* =========================
-   Profile View
-   ========================= */
-#profileView.isOpen{ display: flex; }
-
-#profileView{
-  width: 100%;
-  margin: 0 auto;
-  min-height: 62vh;
-  flex-direction: column;
-  align-items: center;
-  white-space: nowrap;
-}
-
-#profileView .ProfileViewGreeting{
-  font-family: "Waltograph", system-ui, sans-serif;
-  font-size: clamp(100px, 4.2vw,160px);
-  font-weight: 400;
-  font-synthesis: none;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  color: rgba(255,255,255,0.92);
-  text-shadow: 0 2px 12px rgba(0,0,0,0.28);
-  margin: 20px auto;      /* center horizontally */
-  max-width: 92vw;        /* keep it inside the screen */
-  white-space: nowrap;    /* force single line */
-}
+  .rail-card{
+    width: 100%;
+    height: 52px;
+    display: flex;
+    align-items: center;
+   gap: 8px;             /* keep */
+  justify-content: center;
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
+    box-shadow:
+      0 8px 14px rgba(0,0,0,0.20),
+      inset 0 1px 0 rgba(255,255,255,0.10);
+  }
 
 
-
-#profileActions{
-  margin-top: 18px;
-  width: min(520px, 92vw);
-  margin-left: auto;
-  margin-right: auto;
-  padding-bottom: 6px;
-}
-
-/* =========================
-   Home Button
-   ========================= */
-.backBtn{
-  position: absolute;
-  left: 16px;
-  bottom: 8px;
-  width: var(--home-btn-size);
-  height: var(--home-btn-size);
-  border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(0,0,0,0.35);
-  opacity: 0.65;
-  display: none;
-  cursor: pointer;
-  z-index: 50;
-  overflow: hidden;
-  -webkit-tap-highlight-color: transparent;
-  outline: none;
-  padding: 0;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.10),
-    0 14px 30px rgba(0,0,0,0.30);
-}
-
-.backBtn::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:50%;
-  background: rgba(255,255,255,0.18);
-  opacity: 0;
-  transition: opacity 120ms ease;
-  pointer-events:none;
-}
-
-.backBtn.is-pressed{ opacity: 0.95; }
-
-.backBtn.is-pressed::after{
-  opacity: 1;
-  background: rgba(255,255,255,0.38);
-}
-
-.homeIcon{
-  position:absolute;
-  width: 130px;
-  height:auto;
-  left:50%;
-  top:50%;
-  transform: translate(-50%, -50%) translateX(-4px);
-  pointer-events:none;
-}
-
-/* =========================
-   Numpad Overlay
-   ========================= */
-.overlay{
-  position: absolute;
-  inset: 0;
-  display: none;
+/* Icon container (span) — not text, so stop baseline behavior */
+.rail-weatherIcon{
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.65);
-  z-index: 20;
-  pointer-events: none;
+  line-height: 0;
 }
 
-.overlay.show{
-  display:flex;
-  pointer-events:auto;
-}
-
-.numpad{
-  background:#111;
-  padding: 18px;
-  border-radius: var(--radius-md);
-  width: 320px;
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 18px 44px rgba(0,0,0,0.45);
-}
-
-.dots{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin: 10px 0;
-}
-
-.dot{
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.20);
-}
-
-.dot.filled{ background:#fff; }
-
-.grid{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap:10px;
-}
-
-.key{
-  padding:16px;
-  font-size:18px;
-  background: rgba(255,255,255,0.10);
-  border:none;
-  color:#fff;
-  border-radius: 12px;
-  transition: transform 80ms ease, background 120ms ease;
-}
-
-.key:active{
-  transform: scale(0.96);
-  background: rgba(255,255,255,0.18);
-}
-
-.keyFn{ font-size:14px; }
-
-/* Let the [hidden] attribute control visibility */
-.npError{
-  color:#ff9999;
-  text-align:center;
-  margin-top:10px;
-  font-weight: 700;
-}
-
-/* Let the hidden attribute control visibility */
-[hidden] { display: none !important; }
-
-
-
-/* =========================
-   Countdown Config Modal
-   ========================= */
-.cdOverlay{
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 28px;
-  background: rgba(0,0,0,0.65);
-  z-index: 999;
-  pointer-events: none;
-}
-
-.cdOverlay.show{
-  display:flex;
-  pointer-events: auto;
-}
-
-.cdCard{
-  width: min(620px, 96vw);
-  background: rgba(15,15,15,0.94);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: var(--radius-lg);
-  padding: 30px 32px;
-  box-shadow: 0 18px 44px rgba(0,0,0,0.45);
-  pointer-events: auto;
-}
-
-.cdHeader{
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  margin-bottom: 20px;
-  position: relative;
-}
-
-.cdTitle{
-  grid-column: 2;
-  text-align:center;
-  font-size: 32px;
-  font-weight: 900;
-  letter-spacing: 0.2px;
-  pointer-events:none;
-}
-
-.cdClose{
-  grid-column: 3;
-  justify-self: end;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.20);
-  background: rgba(255,255,255,0.10);
-  color: rgba(255,255,255,0.95);
-  cursor: pointer;
-  font-size: 22px;
-  position: relative;
-  z-index: 5;
-}
-
-.cdClose:active{ transform: translateY(1px); }
-
-/* Mode switches (Change Date hides Clear) */
-#countdownOverlay[data-mode="change"] #cdClear{ display:none !important; }
-#countdownOverlay:not([data-mode="change"]) #cdClear{ display:inline-block; }
-
-.fieldRow{
-  display: grid;
-  grid-template-columns: 1fr max-content;
-  align-items: center;
-  gap: 22px;
-  margin: 18px 0;
-  padding: 18px 20px;
-  border-radius: var(--radius-md);
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.10);
-}
-
-.fieldLabel{
-  font-size: 24px;
-  opacity: 0.92;
-}
-
-.fieldInput{
+/* If you render <img> inside the span */
+.rail-weatherIcon img{
+  display: block;
+  height: 50px;   /* make bigger here */
   width: auto;
-  height: 56px;
-  margin: 0 auto;
-  padding: 0 10px;
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.22);
-  background: rgba(0,0,0,0.30);
-  color: rgba(255,255,255,0.95);
-  justify-self: center;
+}
+
+/* If you render inline <svg> inside the span */
+.rail-weatherIcon svg{
+  display: block;
+  height: 50px;   /* make bigger here */
+  width: auto;
+}
+
+  .rail-cardTemp{
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+     padding-right: 5px;
+  }
+
+  .rail-itemWhen{
+    margin-top: 6px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 800;
+    opacity: 0.92;
+    letter-spacing: 0.02em;
+    min-height: 18px;
+  }
+
+  /* HOURS */
+ .rail-sectionTitle{
   font-size: 24px;
   text-align: center;
-  align-self: center;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.95;
+
 }
 
-/* Date input centering on Android/Chromium */
-.fieldInput::-webkit-datetime-edit{ padding:0; text-align:center; width:100%; }
-.fieldInput::-webkit-datetime-edit-fields-wrapper{ display:flex; justify-content:center; width:100%; }
-.fieldInput::-webkit-datetime-edit-text,
-.fieldInput::-webkit-datetime-edit-month-field,
-.fieldInput::-webkit-datetime-edit-day-field,
-.fieldInput::-webkit-datetime-edit-year-field{ text-align:center; }
 
-/* Button row */
-.btnRow{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-top: 24px;
-  width: 100%;
-}
+  .rail-hoursList{
+    
+  margin: 8px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
 
-.btnRow .cdBtn{
-  width: 100%;
-  padding: 14px 14px;
-  font-size: clamp(18px, 2.8vw, 26px);
-  font-weight: 900;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255,255,255,0.20);
-  background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
-  color: rgba(255,255,255,0.96);
+  .rail-hoursItem{
+    display: grid;
+     grid-template-columns: 30px 1fr; /* was 22px */
+  gap: 12px;   
+    align-items: start;
+  }
 
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .rail-hoursIcon{
+    font-size: 24px;
+    opacity: 0.95;
+    margin-top: 2px;
+    margin-right: 4px;
+  }
 
-/* Change mode: Clear is hidden, force Save into the right column */
-#countdownOverlay[data-mode="change"] #cdSave{
-  grid-column: 2;
-}
+  .rail-hoursName{
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.15;
+  }
 
-/* =========================
-   Profile Backgrounds
-   ========================= */
-.app.profile-verhulst .bg{
-  background-image: url("assets/bg-verhulst.webp");
-  background-size: cover;
-  background-position: center;
-}
-.app.profile-lori .bg{
-  background-image: url("assets/bg-lori.jpg");
-  background-size: cover;
-  background-position: center;
-}
-.app.profile-mckenzie .bg{
-  background-image: url("assets/bg-mckenzie.png");
-  background-size: cover;
-  background-position: center;
-}
-.app.profile-kaylia .bg{
-  background-image: url("assets/bg-kaylia.jpg");
-  background-size: cover;
-  background-position: center;
-}
-.app.profile-mira .bg{
-  background-image: url("assets/bg-mira.jpg");
-  background-size: cover;
-  background-position: center;
-}
-.app.profile-resort .bg{
-  background-image: url("assets/bg-resort.jpg");
-  background-size: cover;
-  background-position: center;
-}
-.app[class*="profile-"] .scrim{
-  background: rgba(0,0,0,0.45);
-}
+  .rail-hoursTime{
+    font-size: 18px;
+    opacity: 0.92;
+    margin-top: 3px;
+  }
 
-/* =========================
-   Countdown Mode Backgrounds
-   ========================= */
-.app.countdown-mode .bg{
-  background-image: url("assets/saratoga-bkgd.png");
-  background-size: cover;
-  background-position: center bottom;
-  background-repeat: no-repeat;
-}
-
-.app.countdown-mode.one-day-mode .bg{
-  background-image: url("assets/one-day-bkgd.webp");
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
-
-/* Hide profile UI during countdown mode */
-.app.countdown-mode #greeting,
-.app.countdown-mode #tagline,
-.app.countdown-mode #profileActions{
-  display:none !important;
-}
-
-/* =========================
-   Countdown Display (FlipCounter)
-   ========================= */
-.countdown-section{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 6;
-  width: var(--section-width);
-  padding: 5px;
-}
-
-.flipcounter{
-  position: relative;
-  overflow: hidden;
-  border-radius: 22px;
-  padding: var(--fc-pad);
-  background: linear-gradient(180deg, rgba(30,120,255,0.65), rgba(35,95,220,0.50));
-  border: 1px solid rgba(255,255,255,0.22);
-  box-shadow: 0 16px 34px rgba(0,0,0,0.22);
-  min-height: 340px;
-}
-
-.flipcounter-top{
-  position: relative;
-  z-index: 2;
-  display:flex;
-  align-items:center;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-.flipcounter-kicker{
-  font-weight: 900;
-  font-size: 20px;
-  letter-spacing: 0.04em;
-}
-
-.flipcounter-date{
-  margin-top: 4px;
-  opacity: 0.9;
-  font-size: 16px;
-}
-
-.flipcounter-change{
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.22);
-  background: rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.95);
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.flipcounter-midband{
-  position:absolute;
-  left:0;
-  right:0;
-  top:85px;
-  height:265px;
-  background: rgba(0,0,0,0.16);
-}
-
-.flipcounter-row{
-  position: relative;
-  z-index: 2;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap: var(--fc-gap);
-  padding: 18px 12px 12px;
-}
-
-.flipcounter-digits{
-  display:flex;
-  gap: 12px;
-}
-
-.flipcounter-tile{
-  position: relative;
-  overflow: hidden;
-  width: var(--tile-w);
-  height: var(--tile-h);
-  border-radius: 14px;
-  background: rgba(255,255,255,0.98);
-  box-shadow: 0 14px 30px rgba(0,0,0,0.28);
-  display: grid;
-  place-items: center;
-}
-
-.flipcounter-tile::after{
-  content:"";
-  position:absolute;
-  left:5px;
-  right:5px;
-  top:50%;
-  height: var(--seam-h);
-  transform: translateY(-10px);
-  background: rgba(0,0,0,0.90);
-  border-radius: 3px;
-  pointer-events:none;
-}
-
-.flipcounter-tile span{
-  display:block;
-  width:100%;
-  text-align:center;
-  font-size: var(--digit-size);
-  font-weight: 900;
-  line-height: 1;
-  margin: 0;
-  padding: 0;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum" 1;
-  color: rgba(5,30,55,0.95);
-}
-
-.flipcounter-daysLabel{
-  font-size: var(--days-size);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0.2px;
-  color: rgba(255,255,255,0.95);
-  padding-right: 6px;
-}
-
-.flipcounter-footer{
-  position: relative;
-  z-index: 2;
-  background: rgba(0,0,0,0.14);
-  padding: 10px 14px;
-  text-align:center;
-  border-radius: 14px;
-  margin-top: 10px;
-}
-
-.flipcounter-footerText{
-  font-size: 16px;
-  font-weight: 900;
-  letter-spacing: 0.9px;
-  color: rgba(255,255,255,0.92);
-}
-
-/* =========================
-   One-Day Mode (Tomorrow!)
-   ========================= */
-
-/* Normal countdown darken */
-.app.countdown-mode .scrim { background: rgba(0,0,0,0.25); }
-
-/* One day = brighter */
-.app.countdown-mode.one-day-mode .scrim { background: rgba(0,0,0,0.15); }
-
-/* Hide the flipcounter card only in one-day mode */
-.app.countdown-mode.one-day-mode .flipcounter {
-  display: none !important;
-}
-
-/* One-day message banner */
-.oneDayMessage{
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  z-index: 20;
-
-  --lift: -220px;   /* more negative = higher */
-  --in: 700ms;
-  --hold: 3500ms;
-  --out: 700ms;
-
-  max-width: 980px;
-  min-width: 750px;
-  line-height: 1.35;
+.rail-typicalNote{
+  margin-bottom: 2px;
   text-align: center;
-  white-space: normal;
-
-  font-family: "WaltographUI", system-ui, sans-serif;
-  font-size: clamp(64px, 3.8vw, 72px);
-  font-weight: 900;
-  letter-spacing: 0.06em;
-
-  color: rgba(255,255,255,0.96);
-  text-shadow:
-    0 4px 18px rgba(0,0,0,0.45),
-    0 0 22px rgba(255,255,255,0.35);
-
-  transform: translate(-50%, -50%) translateY(var(--lift));
-
-  opacity: 0;
-  animation: oneDayInOut calc(var(--in) + var(--hold) + var(--out)) ease-in-out infinite;
-  will-change: transform, opacity;
-
-  display: none; /* default off */
-}
-
-/* Only visible in countdown + one-day mode */
-.app.countdown-mode.one-day-mode .oneDayMessage{
-  display: block;
-}
-
-/* ARRIVAL DAY: show banner + make it STATIC (no fade) */
-.app.arrival-day-mode .oneDayMessage{
-  display: block;
-  animation: none !important;
-  opacity: 1 !important;
-}
-
-
-/* Arrival day = NO animation, static banner */
-.app.arrival-day-mode .oneDayMessage {
-  animation: none !important;
-  opacity: 1 !important;
-}
-
-/* ADD: hide flipcounter on ARRIVAL DAY */
-.app.arrival-day-mode .flipcounter{
-  display: none !important;
-}
-
-
-@keyframes oneDayInOut{
-  0%{
-    opacity: 0;
-    transform: translate(-50%, -50%) translateY(calc(var(--lift) + 16px)) scale(0.985);
-  }
-  12%{
-    opacity: 1;
-    transform: translate(-50%, -50%) translateY(var(--lift)) scale(1);
-  }
-  78%{
-    opacity: 1;
-    transform: translate(-50%, -50%) translateY(var(--lift)) scale(1);
-  }
-  100%{
-    opacity: 0;
-    transform: translate(-50%, -50%) translateY(calc(var(--lift) - 10px)) scale(0.99);
-  }
-}
-
-/* =========================
-   Fireworks canvas overlay
-   ========================= */
-#fireworksCanvas{
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
+    font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
   pointer-events: none;
-  background: transparent;
-  z-index: 9999;
 }
 
-/* Arrival day background hook */
-.app.arrival-day-mode .bg{
-  background-image: url("assets/one-day-bkgd.webp");
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
+  /* Hero text safe-zone box */
+  .resortTV-hero .hero-subtitle{
+    font-size: clamp(28px, 3vw, 44px);
+    opacity: 0.9;
+    margin-bottom: 18px;
+  }
+  .resortTV-hero .hero-time{
+    font-size: clamp(36px, 4vw, 64px);
+    font-weight: 500;
+  }
 
-/* Utility */
-.hidden{ display:none !important; }
+  .resortTV-hero .hero-text{
+    position: absolute;
+    right: 20px;
+    left: auto;
 
-/* Type consistency */
-.menuBtn,
-.clock,
-.flipcounter-tile span {
-  font-family: system-ui, sans-serif;
-}
+    top: 45%;
+    transform: translateY(-50%);
 
-/* Digit flip-up "tick" animation (runs when JS toggles .is-flipping) */
-.flipcounter-tile.is-flipping{
-  animation: tileFlipUp 220ms ease-out;
-  transform-origin: 50% 70%;
-}
+    width: min(460px, calc(100% - 120px));
+    text-align: center;
 
-@keyframes tileFlipUp{
-  0%   { transform: translateY(6px) rotateX(0deg); }
-  40%  { transform: translateY(0px) rotateX(-14deg); }
-  100% { transform: translateY(0px) rotateX(0deg); }
-}
+    z-index: 2;
+    padding: 18px 10px;
+    background: rgba(0,0,0,0.18);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 18px;
+    backdrop-filter: blur(2px);
+  }
 
-/* =========================
-   Arrival day: SHOW banner but NO animation/fade
-   ========================= */
-.app.arrival-day-mode .oneDayMessage{
-  display: block;
-  animation: none !important;   /* kill oneDayInOut */
-  opacity: 1 !important;
+  .resortTV-hero .hero-subtitle{ margin: 0 0 10px 0; }
+  .resortTV-hero .hero-time{ margin: 0; }
 }
 
 /* =========================
-   Post-trip mode background + banner (no animation)
+   VIEWS
    ========================= */
-.app.post-trip-mode .bg{
-  background-image: url("assets/bg-welcome-home.png"); /* add this file */
+@layer views {
+
+  .app.view-disneyHome .topbar{
+    display: none;
+  }
+
+  .app.view-disneyHome .center{
+    height: 100vh;
+    padding-top: 0;
+    margin-top: 0;
+    align-items: stretch;
+    justify-content: stretch;
+    text-align: left;
+  }
+
+  .app.view-disneyHome .resortTV-grid{
+    height: 100%;
+  }
+
+  /* Reserve right rail space for the ticker */
+  .app.view-disneyHome{
+    --footer-safe-right: calc(var(--rail-width) + 16px);
+  }
+
+  .app.view-disneyHome .scrim{
+    background: transparent;
+  }
+}
+
+/* ResortTV: allow JS to swap backgrounds cleanly */
+.app.view-disneyHome .bg{
+  background-image: var(--resort-bg);
   background-size: cover;
-  background-position: center bottom;
+  background-position: center;
   background-repeat: no-repeat;
-}
-
-.app.post-trip-mode .scrim{
-  background: rgba(0,0,0,0.40);
-}
-
-.app.post-trip-mode .oneDayMessage{
-  display: block;
-  animation: none !important;
-  opacity: 1 !important;
-}
-
-/* Optional: slightly smaller text for the post-trip message */
-.app.post-trip-mode .oneDayMessage{
-  font-size: clamp(54px, 3.2vw, 64px);
+  transition: opacity 300ms ease;
 }
 
 
+.versionTag{
+  margin-top: 2px;
+  font-size: 14px;
+  opacity: .95;
+  text-transform: uppercase;
+}
