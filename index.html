@@ -21,7 +21,7 @@
     <div class="topLeft">
       <div class="pageText">
         <div id="resortName" class="resortName">Main Home</div>
-<div id="versionTag" class="versionTag">v2.0.0</div>
+<div id="versionTag" class="versionTag">v2.#.#</div>
 
       </div>
     </div>
@@ -88,11 +88,36 @@
 
       <div id="profileActions" class="menuGrid">
         <button class="menuBtn" data-page="disneyHome" type="button">Disney Resort Home</button>
-        <button class="menuBtn" data-page="countdownConfig" type="button">Countdown Config</button>
         <button class="menuBtn" data-page="countdownDisplay" type="button">Countdown Display</button>
         <button class="menuBtn" data-page="disneyPictures" type="button">Disney Pictures</button>
+  <button class="menuBtn" data-page="profileSettings" type="button">Profile Settings</button>
+
       </div>
     </section>
+
+<!-- PAGE: PROFILE SETTINGS -->
+<section id="profileSettingsView" class="page" data-page="profileSettings" hidden>
+  <h1 class="profileSettingsTitle">Profile Settings</h1>
+  <p class="tagline">Settings Saved per Profile.</p>
+
+  <div class="menuGrid" id="profileSettingsActions">
+    <button class="menuBtn" data-setting="arrivalDate" type="button">
+      Disney Arrival Date: <span id="arrivalDateSettingValue" class="settingValue">Not set</span>
+    </button>
+
+    <button class="menuBtn" data-setting="homeLocation" type="button">
+      Home Location (Weather): <span id="homeLocationSettingValue" class="settingValue">Not set</span>
+    </button>
+
+    <button class="menuBtn" data-setting="toggleCountdownOnTV" type="button">
+      Countdown on Resort TV: <span id="countdownOnTvState">Off</span>
+    </button>
+  </div>
+</section>
+
+
+
+
 
     <!-- PAGE: COUNTDOWN DISPLAY -->
     <section id="countdownSection" class="page countdown-section" data-page="countdownDisplay" hidden aria-label="Disney Arrival Countdown">
@@ -338,6 +363,47 @@
       <div id="npError" class="npError" hidden>Incorrect PIN</div>
     </div>
   </div>
+
+<!-- HOME LOCATION OVERLAY -->
+<div id="homeLocationOverlay" class="overlay" hidden aria-hidden="true" inert>
+  <div class="overlayCard">
+    <button class="overlayClose" id="homeLocClose" type="button" aria-label="Close">✕</button>
+
+    <h2 class="overlayTitle">Home Location</h2>
+    <p class="overlaySub">Used for your “Home” weather tile.</p>
+
+    <div class="formRow">
+      <label class="formLabel" for="homeLocLabel">Label (optional)</label>
+      <input id="homeLocLabel" type="text" placeholder="e.g., Woodbury, MN" />
+    </div>
+
+    <div class="formGrid2">
+      <div class="formRow">
+        <label class="formLabel" for="homeLocLat">Latitude</label>
+        <input id="homeLocLat" type="number" inputmode="decimal" step="0.0001" placeholder="44.9239" />
+      </div>
+
+      <div class="formRow">
+        <label class="formLabel" for="homeLocLon">Longitude</label>
+        <input id="homeLocLon" type="number" inputmode="decimal" step="0.0001" placeholder="-92.9594" />
+      </div>
+    </div>
+
+    <div id="homeLocError" class="formError" hidden>
+      Please enter a valid latitude (-90..90) and longitude (-180..180).
+    </div>
+
+    <div class="overlayActions">
+      <button id="homeLocUseWoodbury" class="btnSecondary" type="button">Use Woodbury, MN</button>
+      <button id="homeLocClear" class="btnDanger" type="button">Clear</button>
+      <button id="homeLocSave" class="btnPrimary" type="button">Save</button>
+    </div>
+  </div>
+</div>
+
+
+
+
 
   <!-- FOOTER -->
   <footer class="bottombar">

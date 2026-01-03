@@ -8,7 +8,11 @@ const PIN_LEN = PASSWORD.length;
 const POST_TRIP_START_DAYS = 2;     // show post-trip starting 2 days after arrival day
 const POST_TRIP_KEEP_DAYS = 30;     // keep arrival date for up to 30 days, then wipe
 const WEATHER_ICON_BASE = "assets/weather/icons/";
-const APP_VERSION = "v2.0.0";
+const APP_VERSION = "v2.0.5";
+const KEY_SHOW_CD_ON_TV = "showCountdownOnResortTV";
+const KEY_HOME_LOCATION = "homeLocation"; // per-profile storage key prefix
+
+
 
 
 /***********************
@@ -20,12 +24,16 @@ const VIEWS = Object.freeze({
   PROFILE: "profile",
   COUNTDOWN_DISPLAY: "countdownDisplay",
   DISNEY_HOME: "disneyHome",
+  PROFILE_SETTINGS: "profileSettings",
+
 });
 
 const OVERLAYS = Object.freeze({
   NUMPAD: "numpad",
   COUNTDOWN: "countdown",
+  HOME_LOCATION: "homeLocation",
 });
+
 
 /***********************
  * QUOTES
@@ -92,6 +100,7 @@ const PROFILES = {
 /***********************
  * UI (single source of truth for elements)
  ***********************/
+
 const UI = {
   app: document.querySelector(".app"),
 
@@ -101,11 +110,12 @@ const UI = {
   profileView: document.getElementById("profileView"),
   countdownSection: document.getElementById("countdownSection"),
   resortTV: document.getElementById("resortTV"),
+  profileSettingsView: document.getElementById("profileSettingsView"),
 
   // Common
   backBtn: document.getElementById("backBtn"),
   resortName: document.getElementById("resortName"),
-versionTag: document.getElementById("versionTag"),
+  versionTag: document.getElementById("versionTag"),
   note: document.getElementById("note"),
   message: document.getElementById("message"),
 
@@ -150,10 +160,19 @@ versionTag: document.getElementById("versionTag"),
   oneDayText: document.getElementById("oneDayText"),
   flipcounter: document.querySelector("#countdownSection .flipcounter"),
 
-
-
-
+  // Home Location overlay
+  homeLocationOverlay: document.getElementById("homeLocationOverlay"),
+  homeLocClose: document.getElementById("homeLocClose"),
+  homeLocLabel: document.getElementById("homeLocLabel"),
+  homeLocLat: document.getElementById("homeLocLat"),
+  homeLocLon: document.getElementById("homeLocLon"),
+  homeLocError: document.getElementById("homeLocError"),
+  homeLocUseWoodbury: document.getElementById("homeLocUseWoodbury"),
+  homeLocClear: document.getElementById("homeLocClear"),
+  homeLocSave: document.getElementById("homeLocSave"),
 };
+
+
 
 /***********************
  * RESORT TV: HERO ROTATION
@@ -229,10 +248,12 @@ function stopResortHeroRotation() {
  ***********************/
 const state = {
   view: VIEWS.SPLASH,
-  overlay: {
-    [OVERLAYS.NUMPAD]: false,
-    [OVERLAYS.COUNTDOWN]: false,
-  },
+overlay: {
+  [OVERLAYS.NUMPAD]: false,
+  [OVERLAYS.COUNTDOWN]: false,
+  [OVERLAYS.HOME_LOCATION]: false,
+},
+
 
   pin: "",
   isUnlocked: false,
@@ -280,13 +301,13 @@ const viewDefs = {
   [VIEWS.PROFILE]: {
     enter() {
       if (!state.activeProfileKey) return;
+ setProfileBackground(state.activeProfileKey);
+
 
       state.inCountdownDisplay = false;
       stopOneDayLoop();
       Fireworks.stop({ clear: true });
-
       updateResortNameWithSavedDate();
-
       const p = PROFILES[state.activeProfileKey];
       if (!p) return;
 
@@ -322,7 +343,13 @@ const viewDefs = {
       stopOneDayLoop();
       hideOneDayMessage();
       Fireworks.stop({ clear: true });
-      UI.app?.classList.remove("countdown-mode", "one-day-mode", "arrival-day-mode");
+      UI.app?.classList.remove(
+        "countdown-mode",
+        "one-day-mode",
+        "arrival-day-mode",
+        "post-trip-mode"
+      );
+      
     },
   },
 
@@ -341,14 +368,37 @@ const viewDefs = {
       RESORT_HERO_SLIDES.forEach(sl => preloadImage(sl.bg));
       startResortHeroRotation();
   updateParkHoursLive();
+applyCountdownOnTvFlag();
 
 
     },
     exit() {
       UI.app?.classList.remove("view-disneyHome");
+      UI.app?.classList.remove("tv-countdown-enabled");
+
       stopResortHeroRotation();
     }
   },
+
+[VIEWS.PROFILE_SETTINGS]: {
+  enter() {
+    if (!state.activeProfileKey) return;
+
+    const p = PROFILES[state.activeProfileKey];
+    if (UI.resortName && p) UI.resortName.textContent = `${p.name} • Profile Settings`;
+
+    if (UI.note) UI.note.textContent = "";
+    if (UI.backBtn) UI.backBtn.style.display = "flex";
+    if (UI.message) UI.message.textContent = getRandomQuote();
+updateCountdownOnTvLabel();
+updateArrivalDateSettingLabel();
+    stopOneDayLoop();
+    Fireworks.stop({ clear: true });
+  },
+},
+
+
+
 };
 
 /***********************
@@ -387,6 +437,8 @@ function renderPages() {
   show(UI.profileView, state.view === VIEWS.PROFILE);
   show(UI.countdownSection, state.view === VIEWS.COUNTDOWN_DISPLAY);
   show(UI.resortTV, state.view === VIEWS.DISNEY_HOME);
+  show(UI.profileSettingsView, state.view === VIEWS.PROFILE_SETTINGS);
+
 }
 
 function renderOverlays() {
@@ -405,6 +457,18 @@ function renderOverlays() {
     if (open) UI.countdownOverlay.removeAttribute("inert");
     else UI.countdownOverlay.setAttribute("inert", "");
   }
+
+  if (UI.homeLocationOverlay) {
+    const open = state.overlay[OVERLAYS.HOME_LOCATION];
+    UI.homeLocationOverlay.removeAttribute("hidden");
+    UI.homeLocationOverlay.classList.toggle("show", open);
+    UI.homeLocationOverlay.setAttribute("aria-hidden", open ? "false" : "true");
+
+    if (open) UI.homeLocationOverlay.removeAttribute("inert");
+    else UI.homeLocationOverlay.setAttribute("inert", "");
+  }
+
+
 }
 
 function renderUnlockUI() {
@@ -444,8 +508,10 @@ function renderCountdownDisplay() {
   setDigits(daysLeft, { flip: false });
   applyOneDayMode();
 
-  const dFrom = daysFromArrival();
-  const isNormalCountdown = (state.inCountdownDisplay && dFrom !== 0 && dFrom !== 1);
+ const dFrom = daysFromArrival();
+const isNormalCountdown =
+  state.inCountdownDisplay && dFrom !== null && dFrom > 1;
+
 
   if (isNormalCountdown) {
     if (state.lastDaysLeft === null || state.lastDaysLeft !== daysLeft) {
@@ -475,7 +541,15 @@ function renderCountdownDisplay() {
   // ✅ Weather updater (Open-Meteo) every 10 minutes
   if (typeof startWeather === "function") setTimeout(startWeather, 0);
 if (typeof startParkHours === "function") setTimeout(startParkHours, 0);
-  setView(VIEWS.SPLASH);
+setView(VIEWS.SPLASH);
+
+updateCountdownOnTvLabel();
+applyCountdownOnTvFlag();
+
+if (UI.versionTag) UI.versionTag.textContent = APP_VERSION;
+
+
+
 })();
 
 
@@ -563,6 +637,30 @@ function setSystemMessage(text) {
 function getRandomQuote() {
   return DISNEY_QUOTES[Math.floor(Math.random() * DISNEY_QUOTES.length)];
 }
+
+function updateCountdownOnTvLabel() {
+  const el = document.getElementById("countdownOnTvState");
+  if (!el) return;
+  el.textContent = getShowCountdownOnResortTV() ? "On" : "Off";
+}
+
+function applyCountdownOnTvFlag() {
+  const enabled = getShowCountdownOnResortTV();
+  UI.app?.classList.toggle("tv-countdown-enabled", enabled && state.view === VIEWS.DISNEY_HOME);
+}
+
+
+
+function getShowCountdownOnResortTV() {
+  const v = localStorage.getItem(KEY_SHOW_CD_ON_TV);
+  if (v === null) return true;          // default ON
+  return v === "true";
+}
+
+function setShowCountdownOnResortTV(on) {
+  localStorage.setItem(KEY_SHOW_CD_ON_TV, String(Boolean(on)));
+}
+
 
 function openNextTripPlanner() {
   if (state.view !== VIEWS.COUNTDOWN_DISPLAY) return;
@@ -948,9 +1046,61 @@ UI.unlockBtn?.addEventListener("click", (e) => {
   setOverlay(OVERLAYS.NUMPAD, true);
 });
 
+// Profile Settings → Disney Arrival Date (open the existing countdown modal)
+document
+  .querySelector('#profileSettingsView [data-setting="arrivalDate"]')
+  ?.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Must have an active profile to know which localStorage key to use
+    if (!state.activeProfileKey) return;
+
+    state.pendingGoToCountdownDisplay = false;
+    openCountdownConfig("config"); // opens your existing modal
+  });
+
+
+
 document.addEventListener("click", (e) => {
 
-  // Post-trip: tap anywhere to open planner
+  // 1️⃣ SETTINGS (MOST SPECIFIC)
+  const settingBtn = e.target.closest("[data-setting]");
+  if (settingBtn) {
+    const which = settingBtn.dataset.setting;
+
+    if (which === "toggleCountdownOnTV") {
+      const next = !getShowCountdownOnResortTV();
+      setShowCountdownOnResortTV(next);
+
+      updateCountdownOnTvLabel();
+      applyCountdownOnTvFlag();
+
+      setSystemMessage(next ? "Resort TV countdown: ON" : "Resort TV countdown: OFF");
+      return;
+    }
+
+    if (which === "arrivalDate") {
+      state.pendingGoToCountdownDisplay = false;
+      openCountdownConfig("config");
+      return;
+    }
+
+if (which === "homeLocation") {
+  setSystemMessage("Home Location setting coming soon.");
+  return;
+}
+
+
+    if (which === "resetProfile") {
+      localStorage.removeItem(countdownKey());
+      updateResortNameWithSavedDate();
+      setSystemMessage("Profile settings reset.");
+      return;
+    }
+  }
+
+  // 2️⃣ POST-TRIP TAP ANYWHERE
   if (
     state.view === VIEWS.COUNTDOWN_DISPLAY &&
     (() => {
@@ -963,6 +1113,7 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  // 3️⃣ PROFILE BUTTONS
   const profileBtn = e.target.closest("[data-profile]");
   if (profileBtn) {
     if (!state.isUnlocked) return;
@@ -970,6 +1121,7 @@ document.addEventListener("click", (e) => {
     return;
   }
 
+  // 4️⃣ PAGE NAVIGATION
   const pageBtn = e.target.closest("[data-page]");
   if (pageBtn) {
     loadPage(pageBtn.dataset.page);
@@ -1045,7 +1197,7 @@ function loadPage(pageKey) {
   const p = PROFILES[state.activeProfileKey];
 
   if (pageKey === "disneyHome") {
-    if (UI.resortName) UI.resortName.textContent = `${p.name} • Disney Resort.`;
+    if (UI.resortName) UI.resortName.textContent = `${p.name} • Disney Resort`;
     setSystemMessage("");
     setView(VIEWS.DISNEY_HOME);
     closeCountdownModal();
@@ -1056,6 +1208,12 @@ function loadPage(pageKey) {
     if (UI.resortName) UI.resortName.textContent = `${p.name} • Disney Pictures`;
     setSystemMessage("Disney Pictures coming soon.");
     setView(VIEWS.PROFILE);
+    closeCountdownModal();
+    return;
+  }
+
+  if (pageKey === "profileSettings") {
+    setView(VIEWS.PROFILE_SETTINGS);
     closeCountdownModal();
     return;
   }
@@ -1084,8 +1242,64 @@ function loadPage(pageKey) {
 
     if (UI.note) UI.note.textContent = "";
     setView(VIEWS.COUNTDOWN_DISPLAY);
+    return;
   }
 }
+
+UI.homeLocClose?.addEventListener("click", () => {
+  haptic("light");
+  closeHomeLocationModal();
+});
+
+UI.homeLocUseWoodbury?.addEventListener("click", () => {
+  haptic("light");
+  if (UI.homeLocLabel) UI.homeLocLabel.value = DEFAULT_HOME.label;
+  if (UI.homeLocLat) UI.homeLocLat.value = String(DEFAULT_HOME.lat);
+  if (UI.homeLocLon) UI.homeLocLon.value = String(DEFAULT_HOME.lon);
+  if (UI.homeLocError) UI.homeLocError.hidden = true;
+});
+
+UI.homeLocClear?.addEventListener("click", () => {
+  haptic("light");
+  setSavedHomeLocation(null);
+  applyHomeLocationToWeather();
+  updateHomeLocationSettingLabel();
+
+  // refresh weather immediately
+  if (typeof updateWeatherBoard === "function") updateWeatherBoard();
+
+  closeHomeLocationModal();
+  setSystemMessage("Home location cleared");
+});
+
+UI.homeLocSave?.addEventListener("click", () => {
+  haptic("medium");
+  if (!state.activeProfileKey) return;
+
+  const label = String(UI.homeLocLabel?.value ?? "").trim();
+  const lat = Number(UI.homeLocLat?.value);
+  const lon = Number(UI.homeLocLon?.value);
+
+  if (!isValidLatLon(lat, lon)) {
+    if (UI.homeLocError) UI.homeLocError.hidden = false;
+    haptic("error");
+    return;
+  }
+
+  // Keep tz as America/Chicago for now (you can add a selector later)
+  const loc = { label, lat, lon, tz: DEFAULT_HOME.tz };
+
+  setSavedHomeLocation(loc);
+  applyHomeLocationToWeather();
+  updateHomeLocationSettingLabel();
+
+  // refresh weather immediately
+  if (typeof updateWeatherBoard === "function") updateWeatherBoard();
+
+  closeHomeLocationModal();
+  setSystemMessage("Home location saved");
+});
+
 
 /***********************
  * COUNTDOWN CONFIG OVERLAY
@@ -1136,21 +1350,38 @@ UI.cdDate?.addEventListener("change", () => {
 });
 
 UI.cdClear?.addEventListener("click", () => {
+  if (!state.activeProfileKey) return;
+
+  // 1️⃣ Remove arrival date
   localStorage.removeItem(countdownKey());
 
+  // 2️⃣ Reset UI state
   if (UI.cdError) UI.cdError.hidden = true;
   if (UI.cdDate) UI.cdDate.value = todayYYYYMMDD();
 
+  // 3️⃣ Reset header title
   const p = PROFILES[state.activeProfileKey];
-  if (p && UI.resortName) UI.resortName.textContent = p.name;
+  if (p && UI.resortName) {
+    UI.resortName.textContent = p.name;
+  }
 
-  if (UI.note) UI.note.textContent = "Disney arrival date cleared.";
-  state.pendingGoToCountdownDisplay = false;
+  // 4️⃣ Update Profile Settings button label
+  updateArrivalDateSettingLabel();
 
+  // 5️⃣ Close modal
   closeCountdownModal();
 
-  if (state.view === VIEWS.COUNTDOWN_DISPLAY) setView(VIEWS.PROFILE);
+  // 6️⃣ If user was viewing countdown, return to profile
+  if (state.view === VIEWS.COUNTDOWN_DISPLAY) {
+    setView(VIEWS.PROFILE);
+  }
+
+  // 7️⃣ Optional feedback
+  setSystemMessage("Disney arrival date cleared");
 });
+
+
+
 
 UI.cdSave?.addEventListener("click", () => {
   if (!UI.cdDate || !UI.cdDate.value) return;
@@ -1163,11 +1394,14 @@ UI.cdSave?.addEventListener("click", () => {
   const dt = new Date(`${UI.cdDate.value}T00:00:00`);
   if (Number.isNaN(dt.getTime())) return;
 
-  localStorage.setItem(countdownKey(), dt.toISOString());
-  if (UI.note) UI.note.textContent = "Disney arrival date saved.";
+localStorage.setItem(countdownKey(), dt.toISOString());
 
-  updateResortNameWithSavedDate();
-  closeCountdownModal();
+setSystemMessage("Disney arrival date saved");
+updateArrivalDateSettingLabel();
+
+updateResortNameWithSavedDate();
+closeCountdownModal();
+
 
   if (state.pendingGoToCountdownDisplay) {
     state.pendingGoToCountdownDisplay = false;
@@ -1222,6 +1456,12 @@ UI.backBtn?.addEventListener("click", () => {
     setView(VIEWS.PROFILE);
     return;
   }
+
+  if (state.view === VIEWS.PROFILE_SETTINGS) {
+  setView(VIEWS.PROFILE);
+  return;
+}
+
 });
 
 /***********************
@@ -1863,6 +2103,34 @@ function fmtTimeRange(openISO, closeISO) {
   return `${a} – ${b}`;
 }
 
+function updateArrivalDateSettingLabel() {
+  // Matches index.html: <span id="arrivalDateSettingValue" ...>
+  const valueEl = document.getElementById("arrivalDateSettingValue");
+  if (!valueEl) return;
+
+  const savedIso = localStorage.getItem(countdownKey());
+  if (!savedIso) {
+    valueEl.textContent = "Not set";
+    return;
+  }
+
+  const d = new Date(savedIso);
+  if (Number.isNaN(d.getTime())) {
+    valueEl.textContent = "Not set";
+    return;
+  }
+
+  valueEl.textContent = d.toLocaleDateString([], {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+
+
+
+
 function ymdInTZ(timeZone) {
   const p = tzParts(timeZone); // you already have tzParts() in your weather code
   return `${p.year}-${p.month}-${p.day}`;
@@ -1952,4 +2220,102 @@ function startParkHours() {
 
   // refresh every 30 minutes while running
   window.setInterval(updateParkHoursLive, 30 * 60 * 1000);
+}
+
+/***********************
+ * HOME LOCATION (per-profile)
+ ***********************/
+const DEFAULT_HOME = { label: "Woodbury, MN", lat: 44.9239, lon: -92.9594, tz: "America/Chicago" };
+
+function homeLocationKey() {
+  return `${KEY_HOME_LOCATION}_${state.activeProfileKey || "unknown"}`;
+}
+
+function getSavedHomeLocation() {
+  if (!state.activeProfileKey) return null;
+  const raw = localStorage.getItem(homeLocationKey());
+  if (!raw) return null;
+  try {
+    const obj = JSON.parse(raw);
+    if (!obj || typeof obj !== "object") return null;
+    const lat = Number(obj.lat);
+    const lon = Number(obj.lon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    return {
+      label: String(obj.label ?? "").trim(),
+      lat,
+      lon,
+      tz: String(obj.tz ?? DEFAULT_HOME.tz),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function setSavedHomeLocation(locOrNull) {
+  if (!state.activeProfileKey) return;
+  if (!locOrNull) {
+    localStorage.removeItem(homeLocationKey());
+    return;
+  }
+  localStorage.setItem(homeLocationKey(), JSON.stringify(locOrNull));
+}
+
+function applyHomeLocationToWeather() {
+  const saved = getSavedHomeLocation();
+  const loc = saved ?? DEFAULT_HOME;
+
+  WEATHER.home.lat = loc.lat;
+  WEATHER.home.lon = loc.lon;
+  WEATHER.home.tz  = loc.tz || DEFAULT_HOME.tz;
+}
+
+function updateHomeLocationSettingLabel() {
+  const el = document.getElementById("homeLocationSettingValue");
+  if (!el) return;
+
+  const saved = getSavedHomeLocation();
+  if (!saved) {
+    el.textContent = "Not set";
+    return;
+  }
+
+  // Prefer a friendly label; fall back to coords
+  const label = String(saved.label || "").trim();
+  el.textContent = label ? label : `${saved.lat.toFixed(4)}, ${saved.lon.toFixed(4)}`;
+}
+
+function isValidLatLon(lat, lon) {
+  return (
+    Number.isFinite(lat) &&
+    Number.isFinite(lon) &&
+    lat >= -90 && lat <= 90 &&
+    lon >= -180 && lon <= 180
+  );
+}
+
+function openHomeLocationModal() {
+  if (!UI.homeLocationOverlay) return;
+  if (!state.activeProfileKey) return;
+
+  const saved = getSavedHomeLocation();
+  const loc = saved ?? DEFAULT_HOME;
+
+  if (UI.homeLocLabel) UI.homeLocLabel.value = loc.label ?? "";
+  if (UI.homeLocLat) UI.homeLocLat.value = String(loc.lat ?? "");
+  if (UI.homeLocLon) UI.homeLocLon.value = String(loc.lon ?? "");
+
+  if (UI.homeLocError) UI.homeLocError.hidden = true;
+
+  setOverlay(OVERLAYS.HOME_LOCATION, true);
+  UI.homeLocLat?.focus?.();
+
+  applyHomeLocationToWeather();
+updateHomeLocationSettingLabel();
+
+}
+
+function closeHomeLocationModal() {
+  setOverlay(OVERLAYS.HOME_LOCATION, false);
+  if (UI.homeLocError) UI.homeLocError.hidden = true;
 }
