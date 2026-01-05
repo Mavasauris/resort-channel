@@ -1,85 +1,73 @@
 v0.1.0 — Initial Skeleton
 
-Splash / lock screen
+• Splash / lock screen
+• PIN unlock flow
+• Profile chooser
+• Basic navigation
+• Clock and date display
 
-PIN unlock flow
-
-Profile chooser
-
-Basic navigation
-
-Clock and date display
 
 v0.2.0 — Profile & Navigation
 
-Explicit view routing system (single state.view, setView, view enter/exit)
+• Explicit view routing system (single state.view, setView, view enter/exit)
+• Back button hierarchy
+• Profile-based greetings and taglines
+• Quote ticker rotation
+• Overlay separation (numpad vs countdown config)
 
-Back button hierarchy
-
-Profile-based greetings and taglines
-
-Quote ticker rotation
-
-Overlay separation (numpad vs countdown config)
 
 v1.0.0 — Countdown System (STABLE Web Release)
 
-Per-profile Disney arrival date storage
+• Per-profile Disney arrival date storage
+• Countdown display page
+• Flip-style number animation with safety guards
+• Midnight watcher refresh
+• Countdown configuration overlay
+• One-day mode with rotating messages
+• Arrival-day mode
+• Post-trip mode
+• Fireworks overlay integration
+• Tested as a standalone web app
+• Verified stable for long-running tablet/kiosk use
 
-Countdown display page
-
-Flip-style number animation + animation safety guards
-
-Midnight watcher refresh
-
-Countdown configuration overlay
-
-One-day mode with rotating messages
-
-Arrival-day mode
-
-Post-trip mode
-
-Fireworks overlay integration
-
-Tested as a standalone web app
-
-Verified stable for long-running tablet/kiosk use
 
 v1.1.0 — Disney Resort TV
 
-Disney Resort TV page (DISNEY_HOME)
+• Disney Resort TV page (DISNEY_HOME)
+• Rotating hero slides
+• Background image preloading
+• Hero text separated from background
+• Resort-style visual pacing
 
-Rotating hero slides
-
-Background image preloading
-
-Hero text separated from background
-
-Resort-style visual pacing
 
 v1.2.0 — Live Weather Integration
 
-Open-Meteo live weather (no API key)
+• Open-Meteo live weather (no API key)
+• Home + Disney locations
+• Timezone-aware logic
+• Day/night icon switching
+• “Now” and “Later” forecast buckets
+• 10-minute refresh interval
 
-Home + Disney locations
-
-Timezone-aware logic
-
-Day/night icon switching
-
-“Now” and “Later” forecast buckets
-
-10-minute refresh interval
 
 v2.0.0 — Resort Rail Data: Live Park Hours (STABLE Web Release)
 
-Live park hours integration via ThemeParks.wiki schedule endpoint
+• Live park hours via ThemeParks.wiki schedule endpoint
+• Orlando-time “today” selection logic
+• Fallback to typical hours with indicator when live fetch fails
+• Background refresh loop (30 minutes)
+• Init-based startup call preserved for global app use
 
-Orlando-time “today” selection logic for schedules
 
-Fallback to “typical hours” with * note when live fetch fails
+v2.1.0 — Profile Settings & Home Location (STABLE)
 
-Background refresh loop (30 minutes)
-
-Init-based startup call preserved for global app use
+• Profile Settings page
+• Per-profile Home Location storage
+• City/State/ZIP geocoding for weather source
+• Modal behavior parity across all overlays
+• Back button state safety during blocking modals
+• Clear/Search/Save UX stabilization for Home Location
+• Keyboard focus retention for kiosk usability
+• Encoding cleanup (UTF-8 normalization)
+• Accessibility fixes for modal controls
+• Verified stable for unattended tablet operation

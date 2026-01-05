@@ -15,19 +15,27 @@ Primary features include:
 • Profile-based experiences
 • Disney trip countdown system
 • Clock, date, and rotating quotes
-• Optional visual effects and informational views
+• Resort-style informational views (weather, park hours)
+• Optional visual effects and ambient animations
 
 
 CURRENT STABLE VERSION
 ----------------------
-v1.0.0 — Countdown System (STABLE Web Release)
+v2.1.0 — Profile & Home Location Release (STABLE)
 
-This version represents the first fully stable web release.
-It includes the complete countdown experience and has been
-validated for continuous tablet operation.
+This version represents the current stable release and is
+approved for unattended tablet or kiosk operation.
 
-All versions beyond v1.0.0 are considered unreleased or
-in-progress unless explicitly marked stable.
+Key stability highlights:
+• Fully integrated profile system
+• Stable Disney countdown experience
+• Profile-specific Home Location weather support
+• Modal behavior consistency across the app
+• Back button and navigation state fixes
+• Encoding and accessibility cleanup
+
+All versions beyond v2.1.0 are considered unreleased or
+in-progress unless explicitly marked STABLE.
 
 
 INTENDED USE

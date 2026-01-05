@@ -1,4 +1,4 @@
-<!-- index.html -->
+﻿<!-- index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -370,40 +370,23 @@
     <button class="overlayClose" id="homeLocClose" type="button" aria-label="Close">✕</button>
 
     <h2 class="overlayTitle">Home Location</h2>
-    <p class="overlaySub">Used for your “Home” weather tile.</p>
+    <p class="overlaySub">Enter City, State or ZIP. Tap Search to validate.</p>
 
     <div class="formRow">
-      <label class="formLabel" for="homeLocLabel">Label (optional)</label>
-      <input id="homeLocLabel" type="text" placeholder="e.g., Woodbury, MN" />
+      <label class="formLabel" for="homeLocQuery">City, State or ZIP</label>
+      <input id="homeLocQuery" type="text" placeholder="e.g., Woodbury, MN or 55125" />
     </div>
 
-    <div class="formGrid2">
-      <div class="formRow">
-        <label class="formLabel" for="homeLocLat">Latitude</label>
-        <input id="homeLocLat" type="number" inputmode="decimal" step="0.0001" placeholder="44.9239" />
-      </div>
-
-      <div class="formRow">
-        <label class="formLabel" for="homeLocLon">Longitude</label>
-        <input id="homeLocLon" type="number" inputmode="decimal" step="0.0001" placeholder="-92.9594" />
-      </div>
-    </div>
-
-    <div id="homeLocError" class="formError" hidden>
-      Please enter a valid latitude (-90..90) and longitude (-180..180).
-    </div>
+    <div id="homeLocError" class="formError" hidden></div>
+    <div id="homeLocStatus" class="formStatus" hidden></div>
 
     <div class="overlayActions">
-      <button id="homeLocUseWoodbury" class="btnSecondary" type="button">Use Woodbury, MN</button>
-      <button id="homeLocClear" class="btnDanger" type="button">Clear</button>
-      <button id="homeLocSave" class="btnPrimary" type="button">Save</button>
+           <button id="homeLocClear" class="btnDanger" type="button">Clear</button>
+      <button id="homeLocSearch" class="btnSecondary" type="button">Search</button>
+      <button id="homeLocSave" class="btnPrimary" type="button" disabled>Save</button>
     </div>
   </div>
 </div>
-
-
-
-
 
   <!-- FOOTER -->
   <footer class="bottombar">

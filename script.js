@@ -8,7 +8,7 @@ const PIN_LEN = PASSWORD.length;
 const POST_TRIP_START_DAYS = 2;     // show post-trip starting 2 days after arrival day
 const POST_TRIP_KEEP_DAYS = 30;     // keep arrival date for up to 30 days, then wipe
 const WEATHER_ICON_BASE = "assets/weather/icons/";
-const APP_VERSION = "v2.0.5";
+const APP_VERSION = "v2.1.0";
 const KEY_SHOW_CD_ON_TV = "showCountdownOnResortTV";
 const KEY_HOME_LOCATION = "homeLocation"; // per-profile storage key prefix
 
@@ -163,13 +163,13 @@ const UI = {
   // Home Location overlay
   homeLocationOverlay: document.getElementById("homeLocationOverlay"),
   homeLocClose: document.getElementById("homeLocClose"),
-  homeLocLabel: document.getElementById("homeLocLabel"),
-  homeLocLat: document.getElementById("homeLocLat"),
-  homeLocLon: document.getElementById("homeLocLon"),
+  homeLocQuery: document.getElementById("homeLocQuery"),
   homeLocError: document.getElementById("homeLocError"),
-  homeLocUseWoodbury: document.getElementById("homeLocUseWoodbury"),
+  homeLocStatus: document.getElementById("homeLocStatus"),
   homeLocClear: document.getElementById("homeLocClear"),
+  homeLocSearch: document.getElementById("homeLocSearch"),
   homeLocSave: document.getElementById("homeLocSave"),
+  homeLocResults: document.getElementById("homeLocResults"),
 };
 
 
@@ -249,6 +249,7 @@ function stopResortHeroRotation() {
 const state = {
   view: VIEWS.SPLASH,
 overlay: {
+
   [OVERLAYS.NUMPAD]: false,
   [OVERLAYS.COUNTDOWN]: false,
   [OVERLAYS.HOME_LOCATION]: false,
@@ -392,6 +393,8 @@ applyCountdownOnTvFlag();
     if (UI.message) UI.message.textContent = getRandomQuote();
 updateCountdownOnTvLabel();
 updateArrivalDateSettingLabel();
+updateHomeLocationSettingLabel();
+
     stopOneDayLoop();
     Fireworks.stop({ clear: true });
   },
@@ -468,6 +471,16 @@ function renderOverlays() {
     else UI.homeLocationOverlay.setAttribute("inert", "");
   }
 
+// Disable Back button when a blocking modal is open
+const modalOpen =
+  state.overlay[OVERLAYS.COUNTDOWN] ||
+  state.overlay[OVERLAYS.HOME_LOCATION];
+
+if (UI.backBtn) {
+  UI.backBtn.classList.toggle("disabled", modalOpen);
+  UI.backBtn.setAttribute("aria-disabled", modalOpen ? "true" : "false");
+}
+
 
 }
 
@@ -542,9 +555,6 @@ const isNormalCountdown =
   if (typeof startWeather === "function") setTimeout(startWeather, 0);
 if (typeof startParkHours === "function") setTimeout(startParkHours, 0);
 setView(VIEWS.SPLASH);
-
-updateCountdownOnTvLabel();
-applyCountdownOnTvFlag();
 
 if (UI.versionTag) UI.versionTag.textContent = APP_VERSION;
 
@@ -1087,7 +1097,7 @@ document.addEventListener("click", (e) => {
     }
 
 if (which === "homeLocation") {
-  setSystemMessage("Home Location setting coming soon.");
+  openHomeLocationModal();
   return;
 }
 
@@ -1184,6 +1194,15 @@ function loadProfile(key) {
   if (!p) return;
 
   state.activeProfileKey = key;
+
+updateArrivalDateSettingLabel();
+updateHomeLocationSettingLabel();
+applyHomeLocationToWeather(); // so weather uses the saved home location immediately
+if (typeof updateWeatherBoard === "function") updateWeatherBoard();
+
+
+
+
   setProfileBackground(key);
   clearIfArrivalOlderThan(POST_TRIP_KEEP_DAYS);
 
@@ -1246,59 +1265,74 @@ function loadPage(pageKey) {
   }
 }
 
+
+
 UI.homeLocClose?.addEventListener("click", () => {
   haptic("light");
   closeHomeLocationModal();
 });
 
-UI.homeLocUseWoodbury?.addEventListener("click", () => {
+UI.homeLocSearch?.addEventListener("click", async () => {
   haptic("light");
-  if (UI.homeLocLabel) UI.homeLocLabel.value = DEFAULT_HOME.label;
-  if (UI.homeLocLat) UI.homeLocLat.value = String(DEFAULT_HOME.lat);
-  if (UI.homeLocLon) UI.homeLocLon.value = String(DEFAULT_HOME.lon);
-  if (UI.homeLocError) UI.homeLocError.hidden = true;
+  if (!state.activeProfileKey) return;
+
+  setHomeLocError("");
+  setHomeLocStatus("Searching…");
+  pendingHomeLoc = null;
+  if (UI.homeLocSave) UI.homeLocSave.disabled = true;
+
+  try {
+    const loc = await geocodeHomeQuery(UI.homeLocQuery?.value);
+    pendingHomeLoc = loc;
+    setHomeLocStatus(`Found: ${loc.label} (TZ: ${loc.tz})`);
+    if (UI.homeLocSave) UI.homeLocSave.disabled = false;
+  } catch (err) {
+    setHomeLocStatus("");
+    setHomeLocError(err?.message || "Search failed.");
+    haptic("error");
+  }
 });
 
 UI.homeLocClear?.addEventListener("click", () => {
   haptic("light");
-  setSavedHomeLocation(null);
-  applyHomeLocationToWeather();
-  updateHomeLocationSettingLabel();
 
-  // refresh weather immediately
-  if (typeof updateWeatherBoard === "function") updateWeatherBoard();
+  // Clear input + transient state
+  if (UI.homeLocQuery) {
+    UI.homeLocQuery.value = "";
+    UI.homeLocQuery.focus(); // ✅ KEEP KEYBOARD OPEN
+  }
 
-  closeHomeLocationModal();
-  setSystemMessage("Home location cleared");
+  if (UI.homeLocResults) UI.homeLocResults.innerHTML = "";
+  pendingHomeLoc = null;
+
+  // Disable Save
+  if (UI.homeLocSave) UI.homeLocSave.disabled = true;
+
+  // Clear messages
+  setHomeLocError("");
+  setHomeLocStatus("");
 });
+
+
 
 UI.homeLocSave?.addEventListener("click", () => {
   haptic("medium");
   if (!state.activeProfileKey) return;
-
-  const label = String(UI.homeLocLabel?.value ?? "").trim();
-  const lat = Number(UI.homeLocLat?.value);
-  const lon = Number(UI.homeLocLon?.value);
-
-  if (!isValidLatLon(lat, lon)) {
-    if (UI.homeLocError) UI.homeLocError.hidden = false;
+  if (!pendingHomeLoc) {
+    setHomeLocError("Tap Search first to validate your location.");
     haptic("error");
     return;
   }
 
-  // Keep tz as America/Chicago for now (you can add a selector later)
-  const loc = { label, lat, lon, tz: DEFAULT_HOME.tz };
-
-  setSavedHomeLocation(loc);
+  setSavedHomeLocation(pendingHomeLoc);
   applyHomeLocationToWeather();
   updateHomeLocationSettingLabel();
-
-  // refresh weather immediately
   if (typeof updateWeatherBoard === "function") updateWeatherBoard();
 
   closeHomeLocationModal();
   setSystemMessage("Home location saved");
 });
+
 
 
 /***********************
@@ -1419,50 +1453,48 @@ UI.changeDateBtn?.addEventListener("click", () => {
 
 /******BACK BUTTON ****************/
 UI.backBtn?.addEventListener("click", () => {
+
+  // 1️⃣ Overlay-first behavior (unchanged)
   if (state.overlay[OVERLAYS.COUNTDOWN]) {
     closeCountdownModal();
     return;
   }
+
+  if (state.overlay[OVERLAYS.HOME_LOCATION]) {
+    closeHomeLocationModal();
+    return;
+  }
+
   if (state.overlay[OVERLAYS.NUMPAD]) {
     setOverlay(OVERLAYS.NUMPAD, false);
     return;
   }
 
-  if (state.view === VIEWS.COUNTDOWN_DISPLAY) {
-    if (state.countAnimRaf) {
-      cancelAnimationFrame(state.countAnimRaf);
-      state.countAnimRaf = null;
-    }
-    state.lastDaysLeft = null;
+  // 2️⃣ View navigation (THIS WAS MISSING)
+  switch (state.view) {
+    case VIEWS.PROFILE_SETTINGS:
+      setView(VIEWS.PROFILE);
+      break;
 
-    setView(VIEWS.PROFILE);
-    return;
+    case VIEWS.DISNEY_HOME:
+    case VIEWS.COUNTDOWN_DISPLAY:
+      setView(VIEWS.PROFILE);
+      break;
+
+    case VIEWS.PROFILE:
+      setView(VIEWS.CHOOSER);
+      break;
+
+    case VIEWS.CHOOSER:
+      setView(VIEWS.SPLASH);
+      break;
+
+    default:
+      // SPLASH or unknown → no-op
+      break;
   }
-
-  if (state.view === VIEWS.PROFILE) {
-    setView(VIEWS.CHOOSER);
-    return;
-  }
-
-  if (state.view === VIEWS.CHOOSER) {
-    state.isUnlocked = false;
-    state.activeProfileKey = null;
-    setProfileBackground(null);
-    setView(VIEWS.SPLASH);
-    return;
-  }
-
-  if (state.view === VIEWS.DISNEY_HOME) {
-    setView(VIEWS.PROFILE);
-    return;
-  }
-
-  if (state.view === VIEWS.PROFILE_SETTINGS) {
-  setView(VIEWS.PROFILE);
-  return;
-}
-
 });
+
 
 /***********************
  * MIDNIGHT WATCHER
@@ -2232,25 +2264,31 @@ function homeLocationKey() {
 }
 
 function getSavedHomeLocation() {
-  if (!state.activeProfileKey) return null;
+  if (!state.activeProfileKey) return DEFAULT_HOME;
+
   const raw = localStorage.getItem(homeLocationKey());
-  if (!raw) return null;
+  if (!raw) return DEFAULT_HOME;
+
   try {
     const obj = JSON.parse(raw);
-    if (!obj || typeof obj !== "object") return null;
     const lat = Number(obj.lat);
     const lon = Number(obj.lon);
-    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      return DEFAULT_HOME;
+    }
+
     return {
-      label: String(obj.label ?? "").trim(),
+      label: String(obj.label || DEFAULT_HOME.label),
       lat,
       lon,
-      tz: String(obj.tz ?? DEFAULT_HOME.tz),
+      tz: String(obj.tz || DEFAULT_HOME.tz),
     };
   } catch {
-    return null;
+    return DEFAULT_HOME;
   }
 }
+
 
 function setSavedHomeLocation(locOrNull) {
   if (!state.activeProfileKey) return;
@@ -2298,24 +2336,103 @@ function openHomeLocationModal() {
   if (!UI.homeLocationOverlay) return;
   if (!state.activeProfileKey) return;
 
+  // Load saved (or default) into the search box
   const saved = getSavedHomeLocation();
   const loc = saved ?? DEFAULT_HOME;
 
-  if (UI.homeLocLabel) UI.homeLocLabel.value = loc.label ?? "";
-  if (UI.homeLocLat) UI.homeLocLat.value = String(loc.lat ?? "");
-  if (UI.homeLocLon) UI.homeLocLon.value = String(loc.lon ?? "");
+  if (UI.homeLocQuery) UI.homeLocQuery.value = loc.label ?? "";
 
-  if (UI.homeLocError) UI.homeLocError.hidden = true;
+  // No selection yet until user searches (or uses Woodbury button)
+  pendingHomeLoc = null;
+  if (UI.homeLocSave) UI.homeLocSave.disabled = true;
+
+  setHomeLocError("");
+  setHomeLocStatus(saved ? `Current: ${loc.label}` : "Tip: enter “City, ST” or a ZIP");
 
   setOverlay(OVERLAYS.HOME_LOCATION, true);
-  UI.homeLocLat?.focus?.();
+  UI.homeLocQuery?.focus?.();
 
   applyHomeLocationToWeather();
-updateHomeLocationSettingLabel();
-
+  updateHomeLocationSettingLabel();
 }
+
 
 function closeHomeLocationModal() {
   setOverlay(OVERLAYS.HOME_LOCATION, false);
-  if (UI.homeLocError) UI.homeLocError.hidden = true;
+  setHomeLocError("");
+  setHomeLocStatus("");
+  pendingHomeLoc = null;
+  if (UI.homeLocSave) UI.homeLocSave.disabled = true;
+}
+
+
+let pendingHomeLoc = null; // holds last successful geocode result until Save
+
+function looksLikeZip(s) {
+  return /^\d{5}(-\d{4})?$/.test(String(s).trim());
+}
+
+async function geocodeHomeQuery(query) {
+  const q = String(query || "").trim();
+  if (!q) throw new Error("Please enter a City, State or ZIP.");
+
+  const url =
+    `https://nominatim.openstreetmap.org/search` +
+    `?q=${encodeURIComponent(q)}` +
+    `&format=json` +
+    `&addressdetails=1` +
+    `&limit=5` +
+    `&countrycodes=us`;
+
+  const res = await fetch(url, {
+    headers: {
+      // REQUIRED by Nominatim usage policy
+      "User-Agent": "ResortChannel/2.0 (home-tablet)",
+      "Accept": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Geocoding failed (HTTP ${res.status})`);
+  }
+
+  const results = await res.json();
+  if (!Array.isArray(results) || results.length === 0) {
+    throw new Error("No matches found. Try City, ST or ZIP.");
+  }
+
+  const best = results[0];
+
+  const lat = Number(best.lat);
+  const lon = Number(best.lon);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+    throw new Error("Invalid coordinates returned.");
+  }
+
+  const addr = best.address || {};
+  const labelParts = [
+    addr.city || addr.town || addr.village || addr.hamlet,
+    addr.state,
+  ].filter(Boolean);
+
+  return {
+    label: labelParts.join(", ") || best.display_name,
+    lat,
+    lon,
+    // timezone handled elsewhere (same as today)
+    tz: DEFAULT_HOME.tz,
+  };
+}
+
+
+function setHomeLocError(msg) {
+  if (!UI.homeLocError) return;
+  UI.homeLocError.hidden = !msg;
+  UI.homeLocError.textContent = msg || "";
+}
+
+function setHomeLocStatus(msg) {
+  if (!UI.homeLocStatus) return;
+  UI.homeLocStatus.hidden = !msg;
+  UI.homeLocStatus.textContent = msg || "";
 }

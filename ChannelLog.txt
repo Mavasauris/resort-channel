@@ -57,11 +57,31 @@ Fireworks Overlay
 • High-DPI scaling support
 
 --------------------------------------------------
+Profile Settings & Home Location
+--------------------------------------------------
+• Profile Settings page introduced
+• Per-profile Home Location storage
+• City / State / ZIP geocoding for weather source
+• Modal behavior consistency across the app
+• Back button disabled during blocking modals
+• Clear / Search / Save UX stabilization
+• Keyboard focus retention for kiosk usability
+
+--------------------------------------------------
+Stability, Accessibility & Encoding
+--------------------------------------------------
+• UTF-8 encoding normalization
+• Replacement of corrupted glyphs and symbols
+• Accessible modal controls (aria-labels)
+• Improved focus and interaction safety
+• Reduced accidental navigation states
+
+--------------------------------------------------
 Stability & Refactors
 --------------------------------------------------
 • Centralized UI element registry
 • Explicit view enter/exit lifecycle
-• Overlay isolation (numpad, countdown config)
+• Overlay isolation (numpad, countdown config, home location)
 • Reduced DOM querying
 • Timer cleanup on navigation
 • Improved kiosk reliability
@@ -72,5 +92,6 @@ Current State
 • Core systems stable
 • Weather fully live
 • Countdown logic finalized
+• Profile Settings and Home Location stable
 • Resort TV experience operational
 • Ready for long-running tablet deployment

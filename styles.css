@@ -21,7 +21,6 @@
   display: none;
 }
 
-
   /* =========================
      Fonts
      ========================= */
@@ -424,6 +423,12 @@
     transition: opacity 120ms ease;
     pointer-events:none;
   }
+
+.backBtn.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
 
   .homeIcon{
     position:absolute;
@@ -971,6 +976,252 @@
     font-size: clamp(54px, 3.2vw, 64px);
   }
 
+/* =========================
+   HOME LOCATION OVERLAY (City/State/ZIP) — STYLE ONLY
+   ========================= */
+
+#homeLocationOverlay.overlay{
+  /* your .overlay already covers most behavior; this ensures consistent stacking */
+  z-index: 30;
+}
+
+/* Card shell */
+#homeLocationOverlay .overlayCard{
+  width: min(720px, 92vw);
+  background: rgba(15,15,15,0.94);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: var(--radius-lg);
+  padding: 28px 28px 22px;
+  box-shadow: 0 18px 44px rgba(0,0,0,0.45);
+  position: relative;
+}
+
+/* Close button */
+#homeLocationOverlay .overlayClose{
+  position: absolute;
+  top: 18px;
+  right: 18px;
+
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+
+  border: 1px solid rgba(255,255,255,0.20);
+  background: rgba(255,255,255,0.10);
+  color: rgba(255,255,255,0.95);
+  cursor: pointer;
+
+  font-size: 22px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    0 10px 22px rgba(0,0,0,0.25);
+}
+
+#homeLocationOverlay .overlayClose:active{
+  transform: translateY(1px);
+}
+
+/* Title + subtitle */
+#homeLocationOverlay .overlayTitle{
+  margin: 0 0 8px;
+  font-size: 44px;
+  font-weight: 950;
+  letter-spacing: 0.2px;
+}
+
+#homeLocationOverlay .overlaySub{
+  margin: 0 0 18px;
+  font-size: 22px;
+  opacity: 0.84;
+  line-height: 1.25;
+}
+
+/* Form row */
+#homeLocationOverlay .formRow{
+  margin-top: 10px;
+  padding: 18px 18px;
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+#homeLocationOverlay .formLabel{
+  display: block;
+  text-align: left;
+  font-size: 22px;
+  font-weight: 850;
+  opacity: 0.92;
+  margin-bottom: 10px;
+}
+
+#homeLocationOverlay input[type="text"]{
+  width: 100%;
+  height: 60px;
+  padding: 0 16px;
+
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.22);
+  background: rgba(0,0,0,0.30);
+  color: rgba(255,255,255,0.95);
+
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+
+  outline: none;
+}
+
+#homeLocationOverlay input[type="text"]::placeholder{
+  color: rgba(255,255,255,0.45);
+  font-weight: 700;
+}
+
+/* Error / status blocks */
+#homeLocationOverlay .formError,
+#homeLocationOverlay .formStatus{
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+  text-align: left;
+}
+
+#homeLocationOverlay .formError{
+  background: rgba(255, 80, 80, 0.14);
+  border: 1px solid rgba(255, 120, 120, 0.35);
+  color: rgba(255, 210, 210, 0.95);
+}
+
+#homeLocationOverlay .formStatus{
+  background: rgba(120, 200, 255, 0.12);
+  border: 1px solid rgba(160, 220, 255, 0.28);
+  color: rgba(235, 250, 255, 0.95);
+}
+
+/* Action row */
+#homeLocationOverlay .overlayActions{
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  justify-content: center;   /* ⬅️ THIS is the key */
+  gap: 14px;
+  margin-top: 18px;
+}
+
+
+/* Base button style for modal actions */
+#homeLocationOverlay .overlayActions button{
+  height: 56px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255,255,255,0.20);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
+  color: rgba(255,255,255,0.96);
+min-width: 140px;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.20),
+    0 10px 22px rgba(0,0,0,0.26);
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+#homeLocationOverlay .overlayActions button:active{
+  transform: scale(0.985);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    0 6px 18px rgba(0,0,0,0.22);
+}
+
+/* Variants */
+#homeLocationOverlay .btnSecondary{
+  background: rgba(255,255,255,0.10);
+}
+
+#homeLocationOverlay .btnDanger{
+  background: linear-gradient(180deg, rgba(255,80,80,0.22), rgba(255,80,80,0.10));
+  border-color: rgba(255,140,140,0.35);
+}
+
+#homeLocationOverlay .btnPrimary{
+  background: linear-gradient(180deg, rgba(30,120,255,0.55), rgba(35,95,220,0.45));
+  border-color: rgba(160, 205, 255, 0.40);
+}
+
+/* Disabled Save button */
+#homeLocationOverlay .overlayActions button:disabled{
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+/* Small screens: stack actions */
+@media (max-width: 680px){
+  #homeLocationOverlay .overlayTitle{ font-size: 36px; }
+  #homeLocationOverlay .overlaySub{ font-size: 18px; }
+  #homeLocationOverlay input[type="text"]{ font-size: 22px; height: 54px; }
+
+  #homeLocationOverlay .overlayActions{
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.versionTag{
+  margin-top: 2px;
+  font-size: 14px;
+  opacity: .95;
+  text-transform: uppercase;
+}
+
+/* PROFILE SETTINGS (CSS-only panel + title) */
+#profileSettingsView{
+  background: rgba(74, 74, 74, 1);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  width: min(760px, 92vw);
+  padding: 28px 28px 24px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profileSettingsTitle{
+  font-family: "Waltograph", system-ui, sans-serif;
+  font-size: clamp(120px, 4.6vw, 185px);
+  font-weight: 400;
+  margin: 10px auto 6px;
+  color: rgba(255,255,255,0.92);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.28);
+  white-space: nowrap;
+}
+
+#profileSettingsView .tagline{
+  margin: 0 0 16px 0;
+  opacity: 0.85;
+}
+
+#profileSettingsView .menuGrid{
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+
+
   /* ==============================
      RESORT TV PAGE (base styling)
      ============================== */
@@ -1286,70 +1537,17 @@ background:
   .app.view-disneyHome .scrim{
     background: transparent;
   }
-}
 
-/* ResortTV: allow JS to swap backgrounds cleanly */
-.app.view-disneyHome .bg{
-  background-image: var(--resort-bg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  transition: opacity 300ms ease;
-}
+  /* ResortTV: allow JS to swap backgrounds cleanly */
+  .app.view-disneyHome .bg{
+    background-image: var(--resort-bg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity 300ms ease;
+  }
 
-
-.versionTag{
-  margin-top: 2px;
-  font-size: 14px;
-  opacity: .95;
-  text-transform: uppercase;
-}
-/* =========================
-   PROFILE SETTINGS (CSS-only panel + title)
-   ========================= */
-
-/* Make the Profile Settings page itself the grey panel */
-#profileSettingsView{
-  /* panel look */
-  background: rgba(74, 74, 74, 1);
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-
-  /* sizing */
-  width: min(760px, 92vw);
-  padding: 28px 28px 24px;
-
-  /* IMPORTANT: let .center handle centering */
-  margin: 0;
-
-  /* align content inside panel */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 
-/* Bigger title just for Profile Settings */
-.profileSettingsTitle{
-  font-family: "Waltograph", system-ui, sans-serif;
-  font-size: clamp(120px, 4.6vw, 185px);
-  font-weight: 400;
-  margin: 10px auto 6px;
-  color: rgba(255,255,255,0.92);
-  text-shadow: 0 2px 12px rgba(0,0,0,0.28);
-  white-space: nowrap;
-}
 
-/* Tighter tagline spacing under the bigger title */
-#profileSettingsView .tagline{
-  margin: 0 0 16px 0;
-  opacity: 0.85;
-}
-
-/* Keep settings buttons in one column + spacing */
-#profileSettingsView .menuGrid{
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-top: 10px;
-}
