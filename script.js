@@ -8,7 +8,7 @@ const PIN_LEN = PASSWORD.length;
 const POST_TRIP_START_DAYS = 2;     // show post-trip starting 2 days after arrival day
 const POST_TRIP_KEEP_DAYS = 30;     // keep arrival date for up to 30 days, then wipe
 const WEATHER_ICON_BASE = "assets/weather/icons/";
-const APP_VERSION = "v2.1.0";
+const APP_VERSION = "v2.2.0";
 const KEY_SHOW_CD_ON_TV = "showCountdownOnResortTV";
 const KEY_HOME_LOCATION = "homeLocation"; // per-profile storage key prefix
 
@@ -170,6 +170,10 @@ const UI = {
   homeLocSearch: document.getElementById("homeLocSearch"),
   homeLocSave: document.getElementById("homeLocSave"),
   homeLocResults: document.getElementById("homeLocResults"),
+
+  // Resort TV home Slides
+slideStage: document.getElementById("slideStage"),
+
 };
 
 
@@ -194,46 +198,121 @@ function preloadImage(src) {
   img.src = src;
 }
 
-function setResortBackground(src) {
-  if (!UI.app || !src) return;
-  UI.app.style.setProperty("--resort-bg", `url("${src}")`);
+const SLIDE_MS = 12_000;
+const SLIDE_ANIM_MS = 1800; // <-- MUST match CSS transition ms
+
+
+function ensureSlideStage() {
+  if (UI.slideStage) return UI.slideStage;
+  UI.slideStage = document.getElementById("slideStage") || document.querySelector(".slide-stage");
+  return UI.slideStage;
 }
 
-function setResortHero(slide) {
-  const hero = document.querySelector(".resortTV-hero");
-  if (!hero || !slide) return;
+function createSlideEl(slide) {
+  const el = document.createElement("div");
+  el.className = "slide";
 
-  // background on .bg
-  setResortBackground(slide.bg);
+  const bg = document.createElement("div");
+  bg.className = "slide-bg";
+  bg.style.backgroundImage = `url("${slide.bg}")`;
 
-  const subEl  = document.getElementById("heroSubtitle");
-  const timeEl = document.getElementById("heroTime");
+  const content = document.createElement("div");
+  content.className = "slide-content";
 
-  let textBox = hero.querySelector(".hero-text");
-  if (!textBox) {
-    textBox = document.createElement("div");
-    textBox.className = "hero-text";
-    hero.appendChild(textBox);
+  const sub = document.createElement("div");
+  sub.className = "hero-subtitle";
+  sub.textContent = slide.subtitle ?? "";
 
-    if (subEl) textBox.appendChild(subEl);
-    if (timeEl) textBox.appendChild(timeEl);
+  const time = document.createElement("div");
+  time.className = "hero-time";
+  time.textContent = slide.time ?? "";
+
+  content.appendChild(sub);
+  content.appendChild(time);
+
+  el.appendChild(bg);
+  el.appendChild(content);
+
+  return el;
+}
+
+function mountInitialResortSlide(slide) {
+  const stage = ensureSlideStage();
+  if (!stage) return;
+
+  stage.innerHTML = "";
+  const active = createSlideEl(slide);
+
+  // ✅ Ensure it starts centered, not “default transform”
+  active.classList.add("is-active");
+
+  stage.appendChild(active);
+}
+
+
+
+function transitionToResortSlide(nextSlide) {
+  const stage = ensureSlideStage();
+  if (!stage) return;
+
+  const active = stage.querySelector(".slide.is-active") || stage.querySelector(".slide");
+  const incoming = createSlideEl(nextSlide);
+
+  // ✅ Start incoming off-screen right
+  incoming.classList.add("is-incoming");
+  stage.appendChild(incoming);
+
+  // ✅ Force the browser to commit initial state (prevents tail-end pop)
+  // (either one works; keep both for Android tablets)
+  incoming.getBoundingClientRect();
+  void incoming.offsetWidth;
+
+  // ✅ Next frame: move active left, bring incoming to center
+  requestAnimationFrame(() => {
+    if (active) active.classList.add("is-outgoing");
+    incoming.classList.remove("is-incoming");
+    incoming.classList.add("is-active");
+  });
+
+  // ✅ Cleanup after transition (NOT animationend)
+  let cleaned = false;
+  const cleanup = () => {
+    if (cleaned) return;
+    cleaned = true;
+
+    if (active && active.parentNode) active.parentNode.removeChild(active);
+
+    // Defensive cleanup: keep only the active slide
+    stage.querySelectorAll(".slide").forEach((s) => {
+      if (s !== incoming) s.remove();
+    });
+  };
+
+  // Listen on the slide that is moving out (guaranteed to transition)
+  if (active) {
+    active.addEventListener("transitionend", (e) => {
+      if (e.propertyName !== "transform") return;
+      cleanup();
+    }, { once: true });
   }
 
-  if (subEl) subEl.textContent = slide.subtitle ?? "";
-  if (timeEl) timeEl.textContent = slide.time ?? "";
+  // Fallback (in case transitionend doesn’t fire)
+  window.setTimeout(cleanup, SLIDE_ANIM_MS + 120);
 }
+
 
 function startResortHeroRotation() {
   stopResortHeroRotation();
 
   resortTV.idx = 0;
-  setResortHero(RESORT_HERO_SLIDES[resortTV.idx]);
+  mountInitialResortSlide(RESORT_HERO_SLIDES[resortTV.idx]);
 
   resortTV.timer = window.setInterval(() => {
     if (state.view !== VIEWS.DISNEY_HOME) return;
+
     resortTV.idx = (resortTV.idx + 1) % RESORT_HERO_SLIDES.length;
-    setResortHero(RESORT_HERO_SLIDES[resortTV.idx]);
-  }, 12_000);
+    transitionToResortSlide(RESORT_HERO_SLIDES[resortTV.idx]);
+  }, SLIDE_MS);
 }
 
 function stopResortHeroRotation() {
@@ -241,7 +320,14 @@ function stopResortHeroRotation() {
     clearInterval(resortTV.timer);
     resortTV.timer = null;
   }
+
+  const stage = ensureSlideStage();
+  if (stage) stage.innerHTML = "";
 }
+
+
+
+
 
 /***********************
  * STATE
@@ -1277,20 +1363,27 @@ UI.homeLocSearch?.addEventListener("click", async () => {
   if (!state.activeProfileKey) return;
 
   setHomeLocError("");
-  setHomeLocStatus("Searching…");
+  setHomeLocStatus("Searching location…");
   pendingHomeLoc = null;
   if (UI.homeLocSave) UI.homeLocSave.disabled = true;
 
-  try {
-    const loc = await geocodeHomeQuery(UI.homeLocQuery?.value);
-    pendingHomeLoc = loc;
-    setHomeLocStatus(`Found: ${loc.label} (TZ: ${loc.tz})`);
-    if (UI.homeLocSave) UI.homeLocSave.disabled = false;
-  } catch (err) {
-    setHomeLocStatus("");
-    setHomeLocError(err?.message || "Search failed.");
-    haptic("error");
-  }
+try {
+  const loc = await geocodeHomeQuery(UI.homeLocQuery?.value);
+
+  // 🔑 THIS IS THE MISSING STEP
+  loc.tz = await resolveTimezoneFromLatLon(loc.lat, loc.lon);
+
+  pendingHomeLoc = loc;
+
+ setHomeLocStatus(`Location verified: ${loc.label}`);
+  if (UI.homeLocSave) UI.homeLocSave.disabled = false;
+} catch (err) {
+  setHomeLocStatus("Tip: enter City, ST or ZIP, then tap Search");
+  setHomeLocError(err?.message || "Search failed.");
+  haptic("error");
+}
+
+
 });
 
 UI.homeLocClear?.addEventListener("click", () => {
@@ -2323,14 +2416,7 @@ function updateHomeLocationSettingLabel() {
   el.textContent = label ? label : `${saved.lat.toFixed(4)}, ${saved.lon.toFixed(4)}`;
 }
 
-function isValidLatLon(lat, lon) {
-  return (
-    Number.isFinite(lat) &&
-    Number.isFinite(lon) &&
-    lat >= -90 && lat <= 90 &&
-    lon >= -180 && lon <= 180
-  );
-}
+
 
 function openHomeLocationModal() {
   if (!UI.homeLocationOverlay) return;
@@ -2368,9 +2454,7 @@ function closeHomeLocationModal() {
 
 let pendingHomeLoc = null; // holds last successful geocode result until Save
 
-function looksLikeZip(s) {
-  return /^\d{5}(-\d{4})?$/.test(String(s).trim());
-}
+
 
 async function geocodeHomeQuery(query) {
   const q = String(query || "").trim();
@@ -2386,7 +2470,6 @@ async function geocodeHomeQuery(query) {
 
   const res = await fetch(url, {
     headers: {
-      // REQUIRED by Nominatim usage policy
       "User-Agent": "ResortChannel/2.0 (home-tablet)",
       "Accept": "application/json",
     },
@@ -2398,11 +2481,11 @@ async function geocodeHomeQuery(query) {
 
   const results = await res.json();
   if (!Array.isArray(results) || results.length === 0) {
-    throw new Error("No matches found. Try City, ST or ZIP.");
+throw new Error("No matches found. Try a city and state, or a 5-digit ZIP.");
+
   }
 
   const best = results[0];
-
   const lat = Number(best.lat);
   const lon = Number(best.lon);
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
@@ -2417,12 +2500,38 @@ async function geocodeHomeQuery(query) {
 
   return {
     label: labelParts.join(", ") || best.display_name,
+    city: addr.city || addr.town || addr.village || addr.hamlet || "",
+    state: addr.state || "",
+    postal: addr.postcode || "",
+    country: addr.country_code?.toUpperCase() || "US",
     lat,
     lon,
-    // timezone handled elsewhere (same as today)
-    tz: DEFAULT_HOME.tz,
+    tz: null, // MUST be resolved next
   };
 }
+
+async function resolveTimezoneFromLatLon(lat, lon) {
+  const url =
+    `https://api.open-meteo.com/v1/forecast` +
+    `?latitude=${encodeURIComponent(lat)}` +
+    `&longitude=${encodeURIComponent(lon)}` +
+    `&current=temperature_2m` +
+    `&timezone=auto`;
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Timezone lookup failed (HTTP ${res.status})`);
+  }
+
+  const data = await res.json();
+  if (!data || !data.timezone) {
+    throw new Error("Timezone not returned from Open-Meteo.");
+  }
+
+  return data.timezone; // e.g. "America/Chicago"
+}
+
+
 
 
 function setHomeLocError(msg) {

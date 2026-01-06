@@ -1,5 +1,5 @@
-/* styles.css */
-/* =========================================================
+/* styles.css
+   =========================================================
    Resort Channel — tablet-first (16:10 friendly)
    CLEAN + COMPLETE (with Cascade Layers — no fighting by location)
    ========================================================= */
@@ -11,31 +11,23 @@
    ========================= */
 @layer base {
 
-  /* Pages default hidden via [hidden] attribute */
-#splash[hidden],
-#chooser[hidden],
-#profileView[hidden],
-#profileSettingsView[hidden],
-#countdownSection[hidden],
-#resortTV[hidden]{
-  display: none;
-}
-
   /* =========================
      Fonts
      ========================= */
   @font-face {
     font-family: "Waltograph";
-    src: url("assets/fonts/Waltograph.woff2") format("woff2"),
-         url("assets/fonts/Waltograph.woff") format("woff");
+    src:
+      url("assets/fonts/Waltograph.woff2") format("woff2"),
+      url("assets/fonts/Waltograph.woff") format("woff");
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
     font-family: "WaltographUI";
-    src: url("assets/fonts/WaltographUI-Bold.woff2") format("woff2"),
-         url("assets/fonts/WaltographUI-Bold.woff") format("woff");
+    src:
+      url("assets/fonts/WaltographUI-Bold.woff2") format("woff2"),
+      url("assets/fonts/WaltographUI-Bold.woff") format("woff");
     font-weight: bold;
     font-style: normal;
     font-display: swap;
@@ -95,6 +87,9 @@
     position: relative;
     overflow: hidden;
   }
+
+  /* Always honor [hidden] */
+  [hidden] { display: none !important; }
 
   /* =========================
      Background
@@ -186,7 +181,7 @@
     opacity: 0.95;
   }
 
-  .daySuffix {
+  .daySuffix{
     font-size: 0.6em;
     vertical-align: super;
     margin-left: 2px;
@@ -238,7 +233,7 @@
   }
 
   /* Clamp to 2 lines */
-  .bottombar .ticker #message {
+  .bottombar .ticker #message{
     font-size: clamp(26px, 2.2vw, 32px);
     font-weight: 600;
     line-height: 1.3;
@@ -424,11 +419,10 @@
     pointer-events:none;
   }
 
-.backBtn.disabled {
-  opacity: 0.35;
-  pointer-events: none;
-}
-
+  .backBtn.disabled{
+    opacity: 0.35;
+    pointer-events: none;
+  }
 
   .homeIcon{
     position:absolute;
@@ -455,8 +449,8 @@
   }
 
   .overlay.show{
-    display:flex;
-    pointer-events:auto;
+    display: flex;
+    pointer-events: auto;
   }
 
   .numpad{
@@ -487,15 +481,15 @@
   .grid{
     display:grid;
     grid-template-columns: repeat(3, 1fr);
-    gap:10px;
+    gap: 10px;
   }
 
   .key{
-    padding:16px;
-    font-size:18px;
+    padding: 16px;
+    font-size: 18px;
     background: rgba(255,255,255,0.10);
-    border:none;
-    color:#fff;
+    border: none;
+    color: #fff;
     border-radius: 12px;
     transition: transform 80ms ease, background 120ms ease;
   }
@@ -505,7 +499,7 @@
     background: rgba(255,255,255,0.18);
   }
 
-  .keyFn{ font-size:14px; }
+  .keyFn{ font-size: 14px; }
 
   .npError{
     color:#ff9999;
@@ -513,8 +507,6 @@
     margin-top:10px;
     font-weight: 700;
   }
-
-  [hidden] { display: none !important; }
 
   /* =========================
      Countdown Config Modal
@@ -639,9 +631,7 @@
     text-overflow: ellipsis;
   }
 
-  #countdownOverlay[data-mode="change"] #cdSave{
-    grid-column: 2;
-  }
+  #countdownOverlay[data-mode="change"] #cdSave{ grid-column: 2; }
 
   /* =========================
      Profile Backgrounds
@@ -676,9 +666,7 @@
     background-size: cover;
     background-position: center;
   }
-  .app[class*="profile-"] .scrim{
-    background: rgba(0,0,0,0.45);
-  }
+  .app[class*="profile-"] .scrim{ background: rgba(0,0,0,0.45); }
 
   /* =========================
      Countdown Mode Backgrounds
@@ -848,15 +836,24 @@
     color: rgba(255,255,255,0.92);
   }
 
+  .flipcounter-tile.is-flipping{
+    animation: tileFlipUp 220ms ease-out;
+    transform-origin: 50% 70%;
+  }
+
+  @keyframes tileFlipUp{
+    0%   { transform: translateY(6px) rotateX(0deg); }
+    40%  { transform: translateY(0px) rotateX(-14deg); }
+    100% { transform: translateY(0px) rotateX(0deg); }
+  }
+
   /* =========================
      One-Day / Arrival / Post-trip
      ========================= */
   .app.countdown-mode .scrim { background: rgba(0,0,0,0.25); }
   .app.countdown-mode.one-day-mode .scrim { background: rgba(0,0,0,0.15); }
 
-  .app.countdown-mode.one-day-mode .flipcounter {
-    display: none !important;
-  }
+  .app.countdown-mode.one-day-mode .flipcounter{ display: none !important; }
 
   .oneDayMessage{
     position: fixed;
@@ -886,7 +883,6 @@
       0 0 22px rgba(255,255,255,0.35);
 
     transform: translate(-50%, -50%) translateY(var(--lift));
-
     opacity: 0;
     animation: oneDayInOut calc(var(--in) + var(--hold) + var(--out)) ease-in-out infinite;
     will-change: transform, opacity;
@@ -894,9 +890,7 @@
     display: none;
   }
 
-  .app.countdown-mode.one-day-mode .oneDayMessage{
-    display: block;
-  }
+  .app.countdown-mode.one-day-mode .oneDayMessage{ display: block; }
 
   .app.arrival-day-mode .oneDayMessage{
     display: block;
@@ -904,9 +898,7 @@
     opacity: 1;
   }
 
-  .app.arrival-day-mode .flipcounter{
-    display: none !important;
-  }
+  .app.arrival-day-mode .flipcounter{ display: none !important; }
 
   @keyframes oneDayInOut{
     0%{
@@ -927,6 +919,29 @@
     }
   }
 
+  .app.arrival-day-mode .bg{
+    background-image: url("assets/one-day-bkgd.webp");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  .app.post-trip-mode .bg{
+    background-image: url("assets/bg-welcome-home.png");
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+  }
+
+  .app.post-trip-mode .scrim{ background: rgba(0,0,0,0.40); }
+
+  .app.post-trip-mode .oneDayMessage{
+    display: block;
+    animation: none;
+    opacity: 1;
+    font-size: clamp(54px, 3.2vw, 64px);
+  }
+
   /* =========================
      Fireworks canvas overlay
      ========================= */
@@ -940,291 +955,227 @@
     z-index: 9999;
   }
 
-  .app.arrival-day-mode .bg{
-    background-image: url("assets/one-day-bkgd.webp");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
+  /* =========================
+     HOME LOCATION OVERLAY (City/State/ZIP) — STYLE ONLY
+     ========================= */
+  #homeLocationOverlay.overlay{ z-index: 30; }
+
+  #homeLocationOverlay .overlayCard{
+    width: min(720px, 92vw);
+    background: rgba(15,15,15,0.94);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: var(--radius-lg);
+    padding: 28px 28px 22px;
+    box-shadow: 0 18px 44px rgba(0,0,0,0.45);
+    position: relative;
   }
 
-  .flipcounter-tile.is-flipping{
-    animation: tileFlipUp 220ms ease-out;
-    transform-origin: 50% 70%;
+  #homeLocationOverlay .overlayClose{
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.20);
+    background: rgba(255,255,255,0.10);
+    color: rgba(255,255,255,0.95);
+    cursor: pointer;
+    font-size: 22px;
+    line-height: 1;
+    display: grid;
+    place-items: center;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.14),
+      0 10px 22px rgba(0,0,0,0.25);
   }
 
-  @keyframes tileFlipUp{
-    0%   { transform: translateY(6px) rotateX(0deg); }
-    40%  { transform: translateY(0px) rotateX(-14deg); }
-    100% { transform: translateY(0px) rotateX(0deg); }
+  #homeLocationOverlay .overlayClose:active{ transform: translateY(1px); }
+
+  #homeLocationOverlay .overlayTitle{
+    margin: 0 0 8px;
+    font-size: 44px;
+    font-weight: 950;
+    letter-spacing: 0.2px;
   }
 
-  .app.post-trip-mode .bg{
-    background-image: url("assets/bg-welcome-home.png");
-    background-size: cover;
-    background-position: center bottom;
-    background-repeat: no-repeat;
+  #homeLocationOverlay .overlaySub{
+    margin: 0 0 18px;
+    font-size: 22px;
+    opacity: 0.84;
+    line-height: 1.25;
   }
 
-  .app.post-trip-mode .scrim{
-    background: rgba(0,0,0,0.40);
+  #homeLocationOverlay .formRow{
+    margin-top: 10px;
+    padding: 18px 18px;
+    border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.10);
   }
 
-  .app.post-trip-mode .oneDayMessage{
+  #homeLocationOverlay .formLabel{
     display: block;
-    animation: none;
-    opacity: 1;
-    font-size: clamp(54px, 3.2vw, 64px);
+    text-align: left;
+    font-size: 22px;
+    font-weight: 850;
+    opacity: 0.92;
+    margin-bottom: 10px;
   }
 
-/* =========================
-   HOME LOCATION OVERLAY (City/State/ZIP) — STYLE ONLY
-   ========================= */
+  #homeLocationOverlay input[type="text"]{
+    width: 100%;
+    height: 60px;
+    padding: 0 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.22);
+    background: rgba(0,0,0,0.30);
+    color: rgba(255,255,255,0.95);
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    outline: none;
+  }
 
-#homeLocationOverlay.overlay{
-  /* your .overlay already covers most behavior; this ensures consistent stacking */
-  z-index: 30;
-}
+  #homeLocationOverlay input[type="text"]::placeholder{
+    color: rgba(255,255,255,0.45);
+    font-weight: 700;
+  }
 
-/* Card shell */
-#homeLocationOverlay .overlayCard{
-  width: min(720px, 92vw);
-  background: rgba(15,15,15,0.94);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: var(--radius-lg);
-  padding: 28px 28px 22px;
-  box-shadow: 0 18px 44px rgba(0,0,0,0.45);
-  position: relative;
-}
+  #homeLocationOverlay .formError,
+  #homeLocationOverlay .formStatus{
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 850;
+    letter-spacing: 0.02em;
+    text-align: left;
+  }
 
-/* Close button */
-#homeLocationOverlay .overlayClose{
-  position: absolute;
-  top: 18px;
-  right: 18px;
+  #homeLocationOverlay .formError{
+    background: rgba(255, 80, 80, 0.14);
+    border: 1px solid rgba(255, 120, 120, 0.35);
+    color: rgba(255, 210, 210, 0.95);
+  }
 
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
-
-  border: 1px solid rgba(255,255,255,0.20);
-  background: rgba(255,255,255,0.10);
-  color: rgba(255,255,255,0.95);
-  cursor: pointer;
-
-  font-size: 22px;
-  line-height: 1;
-  display: grid;
-  place-items: center;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.14),
-    0 10px 22px rgba(0,0,0,0.25);
-}
-
-#homeLocationOverlay .overlayClose:active{
-  transform: translateY(1px);
-}
-
-/* Title + subtitle */
-#homeLocationOverlay .overlayTitle{
-  margin: 0 0 8px;
-  font-size: 44px;
-  font-weight: 950;
-  letter-spacing: 0.2px;
-}
-
-#homeLocationOverlay .overlaySub{
-  margin: 0 0 18px;
-  font-size: 22px;
-  opacity: 0.84;
-  line-height: 1.25;
-}
-
-/* Form row */
-#homeLocationOverlay .formRow{
-  margin-top: 10px;
-  padding: 18px 18px;
-  border-radius: var(--radius-md);
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.10);
-}
-
-#homeLocationOverlay .formLabel{
-  display: block;
-  text-align: left;
-  font-size: 22px;
-  font-weight: 850;
-  opacity: 0.92;
-  margin-bottom: 10px;
-}
-
-#homeLocationOverlay input[type="text"]{
-  width: 100%;
-  height: 60px;
-  padding: 0 16px;
-
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.22);
-  background: rgba(0,0,0,0.30);
-  color: rgba(255,255,255,0.95);
-
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-
-  outline: none;
-}
-
-#homeLocationOverlay input[type="text"]::placeholder{
-  color: rgba(255,255,255,0.45);
-  font-weight: 700;
-}
-
-/* Error / status blocks */
-#homeLocationOverlay .formError,
-#homeLocationOverlay .formStatus{
-  margin-top: 14px;
-  padding: 12px 14px;
-  border-radius: 14px;
-  font-size: 18px;
-  font-weight: 850;
-  letter-spacing: 0.02em;
-  text-align: left;
-}
-
-#homeLocationOverlay .formError{
-  background: rgba(255, 80, 80, 0.14);
-  border: 1px solid rgba(255, 120, 120, 0.35);
-  color: rgba(255, 210, 210, 0.95);
-}
-
-#homeLocationOverlay .formStatus{
-  background: rgba(120, 200, 255, 0.12);
-  border: 1px solid rgba(160, 220, 255, 0.28);
-  color: rgba(235, 250, 255, 0.95);
-}
-
-/* Action row */
-#homeLocationOverlay .overlayActions{
-  display: grid;
-  grid-template-columns: repeat(4, auto);
-  justify-content: center;   /* ⬅️ THIS is the key */
-  gap: 14px;
-  margin-top: 18px;
-}
-
-
-/* Base button style for modal actions */
-#homeLocationOverlay .overlayActions button{
-  height: 56px;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255,255,255,0.20);
-  background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
-  color: rgba(255,255,255,0.96);
-min-width: 140px;
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: 0.02em;
-
-  cursor: pointer;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.20),
-    0 10px 22px rgba(0,0,0,0.26);
-
-  -webkit-tap-highlight-color: transparent;
-}
-
-#homeLocationOverlay .overlayActions button:active{
-  transform: scale(0.985);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.18),
-    0 6px 18px rgba(0,0,0,0.22);
-}
-
-/* Variants */
-#homeLocationOverlay .btnSecondary{
-  background: rgba(255,255,255,0.10);
-}
-
-#homeLocationOverlay .btnDanger{
-  background: linear-gradient(180deg, rgba(255,80,80,0.22), rgba(255,80,80,0.10));
-  border-color: rgba(255,140,140,0.35);
-}
-
-#homeLocationOverlay .btnPrimary{
-  background: linear-gradient(180deg, rgba(30,120,255,0.55), rgba(35,95,220,0.45));
-  border-color: rgba(160, 205, 255, 0.40);
-}
-
-/* Disabled Save button */
-#homeLocationOverlay .overlayActions button:disabled{
-  opacity: 0.45;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
-}
-
-/* Small screens: stack actions */
-@media (max-width: 680px){
-  #homeLocationOverlay .overlayTitle{ font-size: 36px; }
-  #homeLocationOverlay .overlaySub{ font-size: 18px; }
-  #homeLocationOverlay input[type="text"]{ font-size: 22px; height: 54px; }
+  #homeLocationOverlay .formStatus{
+    background: rgba(120, 200, 255, 0.12);
+    border: 1px solid rgba(160, 220, 255, 0.28);
+    color: rgba(235, 250, 255, 0.95);
+  }
 
   #homeLocationOverlay .overlayActions{
-    grid-template-columns: 1fr 1fr;
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-content: center;
+    gap: 14px;
+    margin-top: 18px;
   }
-}
-.versionTag{
-  margin-top: 2px;
-  font-size: 14px;
-  opacity: .95;
-  text-transform: uppercase;
-}
 
-/* PROFILE SETTINGS (CSS-only panel + title) */
-#profileSettingsView{
-  background: rgba(74, 74, 74, 1);
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-  width: min(760px, 92vw);
-  padding: 28px 28px 24px;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  #homeLocationOverlay .overlayActions button{
+    height: 56px;
+    min-width: 140px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255,255,255,0.20);
+    background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
+    color: rgba(255,255,255,0.96);
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
 
-.profileSettingsTitle{
-  font-family: "Waltograph", system-ui, sans-serif;
-  font-size: clamp(120px, 4.6vw, 185px);
-  font-weight: 400;
-  margin: 10px auto 6px;
-  color: rgba(255,255,255,0.92);
-  text-shadow: 0 2px 12px rgba(0,0,0,0.28);
-  white-space: nowrap;
-}
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
-#profileSettingsView .tagline{
-  margin: 0 0 16px 0;
-  opacity: 0.85;
-}
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.20),
+      0 10px 22px rgba(0,0,0,0.26);
 
-#profileSettingsView .menuGrid{
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-top: 10px;
-}
+    -webkit-tap-highlight-color: transparent;
+  }
 
+  #homeLocationOverlay .overlayActions button:active{
+    transform: scale(0.985);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.18),
+      0 6px 18px rgba(0,0,0,0.22);
+  }
 
+  #homeLocationOverlay .btnSecondary{ background: rgba(255,255,255,0.10); }
 
-  /* ==============================
+  #homeLocationOverlay .btnDanger{
+    background: linear-gradient(180deg, rgba(255,80,80,0.22), rgba(255,80,80,0.10));
+    border-color: rgba(255,140,140,0.35);
+  }
+
+  #homeLocationOverlay .btnPrimary{
+    background: linear-gradient(180deg, rgba(30,120,255,0.55), rgba(35,95,220,0.45));
+    border-color: rgba(160, 205, 255, 0.40);
+  }
+
+  #homeLocationOverlay .overlayActions button:disabled{
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+
+  @media (max-width: 680px){
+    #homeLocationOverlay .overlayTitle{ font-size: 36px; }
+    #homeLocationOverlay .overlaySub{ font-size: 18px; }
+    #homeLocationOverlay input[type="text"]{ font-size: 22px; height: 54px; }
+    #homeLocationOverlay .overlayActions{ grid-template-columns: 1fr 1fr; }
+  }
+
+  .versionTag{
+    margin-top: 2px;
+    font-size: 14px;
+    opacity: 0.95;
+    text-transform: uppercase;
+  }
+
+  /* =========================
+     PROFILE SETTINGS (CSS-only panel + title)
+     ========================= */
+  #profileSettingsView{
+    background: rgba(74, 74, 74, 1);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+    width: min(760px, 92vw);
+    padding: 28px 28px 24px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profileSettingsTitle{
+    font-family: "Waltograph", system-ui, sans-serif;
+    font-size: clamp(120px, 4.6vw, 185px);
+    font-weight: 400;
+    margin: 10px auto 6px;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.28);
+    white-space: nowrap;
+  }
+
+  #profileSettingsView .tagline{
+    margin: 0 0 16px 0;
+    opacity: 0.85;
+  }
+
+  #profileSettingsView .menuGrid{
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  /* =========================
      RESORT TV PAGE (base styling)
-     ============================== */
+     ========================= */
   #resortTV{
     position: absolute;
     inset: 0;
@@ -1232,9 +1183,7 @@ min-width: 140px;
     height: 100%;
   }
 
-  .page.resortTV{
-    height: 100%;
-  }
+  .page.resortTV{ height: 100%; }
 
   .resortTV-grid{
     display: grid;
@@ -1242,14 +1191,90 @@ min-width: 140px;
     height: 100%;
   }
 
-  .resortTV-hero{
+  /* Slides span full width behind rail */
+  .slide-stage{
+    grid-column: 1 / -1;
+    grid-row: 1;
     position: relative;
-    display: block;
     overflow: hidden;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
   }
 
-  /* Right rail */
+/* Slides: single source of truth (no keyframes, no duplicate definitions) */
+.slide{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+
+  /* default off-screen right */
+  transform: translate3d(100%, 0, 0);
+
+  will-change: transform;
+  backface-visibility: hidden;
+
+  transition: transform 1800ms cubic-bezier(.22,.61,.36,1);
+}
+
+.slide.is-active{
+  transform: translate3d(0, 0, 0);
+}
+
+.slide.is-incoming{
+  transform: translate3d(100%, 0, 0);
+}
+
+.slide.is-outgoing{
+  transform: translate3d(-100%, 0, 0);
+}
+
+  .slide-bg{
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+  }
+
+  .slide-content{
+    position: absolute;
+    right: calc(var(--rail-width) + 20px);
+    left: auto;
+    top: 45%;
+    transform: translateY(-50%);
+    width: min(460px, calc(100% - var(--rail-width) - 120px));
+    text-align: center;
+
+    z-index: 2;
+    padding: 18px 10px;
+
+    background: rgba(0,0,0,0.18);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 18px;
+    backdrop-filter: blur(2px);
+  }
+
+  .slide-content .hero-subtitle{
+    font-size: clamp(28px, 3vw, 44px);
+    opacity: 0.9;
+    margin: 0 0 10px 0;
+  }
+
+  .slide-content .hero-time{
+    font-size: clamp(36px, 4vw, 64px);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  /* Rail */
   .resortTV-rail{
+    grid-column: 2;
+    grid-row: 1;
+    position: relative;
+    z-index: 5;
+
     justify-content: flex-start;
     height: 100%;
     padding: 22px 18px;
@@ -1258,23 +1283,9 @@ min-width: 140px;
     align-items: center;
     gap: 2px;
 
-background:
-  /* subtle blue/purple wave highlight */
-  radial-gradient(
-    circle at 25% 8%,
-    rgba(120,160,255,0.22),
-    transparent 60%
-  ),
-
-  /* main vertical gradient: maroon → plum → deep blue */
-  linear-gradient(
-    180deg,
-    #8a2f45 0%,
-    #6a2b4f 38%,
-    #3b2a5e 68%,
-    #1c2444 100%
-  );
-
+    background:
+      radial-gradient(circle at 25% 8%, rgba(120,160,255,0.22), transparent 60%),
+      linear-gradient(180deg, #8a2f45 0%, #6a2b4f 38%, #3b2a5e 68%, #1c2444 100%);
 
     border-left: 1px solid rgba(255,255,255,0.14);
     box-shadow: -18px 0 40px rgba(0,0,0,0.25);
@@ -1305,10 +1316,7 @@ background:
   }
 
   /* WEATHER */
-  .rail-weatherWrap{
-    width: 100%;
-    padding: 6px 0 8px;
-  }
+  .rail-weatherWrap{ width: 100%; padding: 6px 0 8px; }
 
   .rail-metaRow{
     width: 100%;
@@ -1366,8 +1374,8 @@ background:
     height: 52px;
     display: flex;
     align-items: center;
-   gap: 8px;             /* keep */
-  justify-content: center;
+    gap: 8px;
+    justify-content: center;
     border-radius: 4px;
     border: 1px solid rgba(255,255,255,0.18);
     background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
@@ -1376,28 +1384,19 @@ background:
       inset 0 1px 0 rgba(255,255,255,0.10);
   }
 
+  .rail-weatherIcon{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
 
-/* Icon container (span) — not text, so stop baseline behavior */
-.rail-weatherIcon{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 0;
-}
-
-/* If you render <img> inside the span */
-.rail-weatherIcon img{
-  display: block;
-  height: 50px;   /* make bigger here */
-  width: auto;
-}
-
-/* If you render inline <svg> inside the span */
-.rail-weatherIcon svg{
-  display: block;
-  height: 50px;   /* make bigger here */
-  width: auto;
-}
+  .rail-weatherIcon img,
+  .rail-weatherIcon svg{
+    display: block;
+    height: 50px;
+    width: auto;
+  }
 
   .rail-cardTemp{
     font-size: 30px;
@@ -1405,7 +1404,7 @@ background:
     line-height: 1;
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1;
-     padding-right: 5px;
+    padding-right: 5px;
   }
 
   .rail-itemWhen{
@@ -1419,19 +1418,16 @@ background:
   }
 
   /* HOURS */
- .rail-sectionTitle{
-  font-size: 24px;
-  text-align: center;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  opacity: 0.95;
-
-}
-
+  .rail-sectionTitle{
+    font-size: 24px;
+    text-align: center;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.95;
+  }
 
   .rail-hoursList{
-    
-  margin: 8px 0;
+    margin: 8px 0;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -1439,8 +1435,8 @@ background:
 
   .rail-hoursItem{
     display: grid;
-     grid-template-columns: 30px 1fr; /* was 22px */
-  gap: 12px;   
+    grid-template-columns: 30px 1fr;
+    gap: 12px;
     align-items: start;
   }
 
@@ -1463,48 +1459,16 @@ background:
     margin-top: 3px;
   }
 
-.rail-typicalNote{
-  margin-bottom: 2px;
-  text-align: center;
-    font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  opacity: 0.65;
-  pointer-events: none;
-}
-
-  /* Hero text safe-zone box */
-  .resortTV-hero .hero-subtitle{
-    font-size: clamp(28px, 3vw, 44px);
-    opacity: 0.9;
-    margin-bottom: 18px;
-  }
-  .resortTV-hero .hero-time{
-    font-size: clamp(36px, 4vw, 64px);
-    font-weight: 500;
-  }
-
-  .resortTV-hero .hero-text{
-    position: absolute;
-    right: 20px;
-    left: auto;
-
-    top: 45%;
-    transform: translateY(-50%);
-
-    width: min(460px, calc(100% - 120px));
+  .rail-typicalNote{
+    margin-bottom: 2px;
     text-align: center;
-
-    z-index: 2;
-    padding: 18px 10px;
-    background: rgba(0,0,0,0.18);
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 18px;
-    backdrop-filter: blur(2px);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    opacity: 0.65;
+    pointer-events: none;
   }
 
-  .resortTV-hero .hero-subtitle{ margin: 0 0 10px 0; }
-  .resortTV-hero .hero-time{ margin: 0; }
 }
 
 /* =========================
@@ -1512,9 +1476,9 @@ background:
    ========================= */
 @layer views {
 
-  .app.view-disneyHome .topbar{
-    display: none;
-  }
+  .app.view-disneyHome .topbar{ display: none; }
+
+  .app.view-disneyHome .bg{ opacity: 0; }
 
   .app.view-disneyHome .center{
     height: 100vh;
@@ -1525,29 +1489,12 @@ background:
     text-align: left;
   }
 
-  .app.view-disneyHome .resortTV-grid{
-    height: 100%;
-  }
+  .app.view-disneyHome .resortTV-grid{ height: 100%; }
 
   /* Reserve right rail space for the ticker */
   .app.view-disneyHome{
     --footer-safe-right: calc(var(--rail-width) + 16px);
   }
 
-  .app.view-disneyHome .scrim{
-    background: transparent;
-  }
-
-  /* ResortTV: allow JS to swap backgrounds cleanly */
-  .app.view-disneyHome .bg{
-    background-image: var(--resort-bg);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: opacity 300ms ease;
-  }
-
+  .app.view-disneyHome .scrim{ background: transparent; }
 }
-
-
-
