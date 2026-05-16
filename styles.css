@@ -1,5 +1,4 @@
-/* styles.css
-   =========================================================
+/* =========================================================
    Resort Channel — tablet-first (16:10 friendly)
    CLEAN + COMPLETE (with Cascade Layers — no fighting by location)
    ========================================================= */
@@ -11,23 +10,30 @@
    ========================= */
 @layer base {
 
+  /* Pages default hidden via [hidden] attribute */
+  #splash[hidden],
+  #chooser[hidden],
+  #profileView[hidden],
+  #countdownSection[hidden],
+  #resortTV[hidden]{
+    display: none;
+  }
+
   /* =========================
      Fonts
      ========================= */
   @font-face {
     font-family: "Waltograph";
-    src:
-      url("assets/fonts/Waltograph.woff2") format("woff2"),
-      url("assets/fonts/Waltograph.woff") format("woff");
+    src: url("assets/fonts/Waltograph.woff2") format("woff2"),
+         url("assets/fonts/Waltograph.woff") format("woff");
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
     font-family: "WaltographUI";
-    src:
-      url("assets/fonts/WaltographUI-Bold.woff2") format("woff2"),
-      url("assets/fonts/WaltographUI-Bold.woff") format("woff");
+    src: url("assets/fonts/WaltographUI-Bold.woff2") format("woff2"),
+         url("assets/fonts/WaltographUI-Bold.woff") format("woff");
     font-weight: bold;
     font-style: normal;
     font-display: swap;
@@ -44,7 +50,6 @@
     --home-btn-size: 128px;
     --home-btn-gap: 24px;
     --footer-safe-left: calc(var(--home-btn-size) + var(--home-btn-gap));
-    --footer-safe-right: 16px;
 
     /* UI */
     --radius-lg: 24px;
@@ -69,9 +74,6 @@
 
     /* Button system */
     --btn-width: 480px;
-
-    /* Rail */
-    --rail-width: 310px;
   }
 
   html, body{
@@ -87,9 +89,6 @@
     position: relative;
     overflow: hidden;
   }
-
-  /* Always honor [hidden] */
-  [hidden] { display: none !important; }
 
   /* =========================
      Background
@@ -181,7 +180,7 @@
     opacity: 0.95;
   }
 
-  .daySuffix{
+  .daySuffix {
     font-size: 0.6em;
     vertical-align: super;
     margin-left: 2px;
@@ -201,29 +200,30 @@
     margin-top: -10vh;
   }
 
-  /* Let the page host behave like a full-screen stage */
+  /* Make pageHost a positioning context for full-screen pages like ResortTV */
   #pageHost{
     position: relative;
-    width: 100%;
-    height: 100%;
   }
 
   /* =========================
      Bottom Bar / Quote / Ticker
      ========================= */
   .bottombar{
-    position: fixed;
+    position: absolute;
+    bottom: 6px;
     left: 0;
     right: 0;
-    bottom: 6px;
     padding: 10px 16px;
     z-index: 5;
   }
 
+  /* Center the ticker while reserving space for home button on left */
   .bottombar .ticker{
-    margin-left: var(--footer-safe-left);
-    margin-right: var(--footer-safe-right);
-    width: auto;
+    position: fixed;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    width: min(960px, calc(92vw - var(--footer-safe-left)));
     text-align: center;
   }
 
@@ -233,7 +233,7 @@
   }
 
   /* Clamp to 2 lines */
-  .bottombar .ticker #message{
+  .bottombar .ticker #message {
     font-size: clamp(26px, 2.2vw, 32px);
     font-weight: 600;
     line-height: 1.3;
@@ -273,7 +273,7 @@
 
   #unlock{
     scale: 2.5;
-    padding: 12px 18px;
+    padding: 12px 18px; /* fixed: was "px 18px" */
     font-size: 18px;
   }
 
@@ -290,7 +290,7 @@
     display: grid;
     grid-template-columns: repeat(2, auto);
     gap: 12px;
-    margin: 30px auto 0;
+    margin: 0 auto;
     width: fit-content;
     justify-items: center;
     align-items: center;
@@ -348,9 +348,19 @@
     white-space: nowrap;
   }
 
+  #chooserActions{
+    margin-top: 18px;
+    width: min(520px, 92vw);
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 6px;
+  }
+
   /* =========================
      Profile View
      ========================= */
+  #profileView.isOpen{ display: flex; }
+
   #profileView{
     width: 100%;
     margin: 0 auto;
@@ -419,9 +429,11 @@
     pointer-events:none;
   }
 
-  .backBtn.disabled{
-    opacity: 0.35;
-    pointer-events: none;
+  .backBtn.is-pressed{ opacity: 0.95; }
+
+  .backBtn.is-pressed::after{
+    opacity: 1;
+    background: rgba(255,255,255,0.38);
   }
 
   .homeIcon{
@@ -449,8 +461,8 @@
   }
 
   .overlay.show{
-    display: flex;
-    pointer-events: auto;
+    display:flex;
+    pointer-events:auto;
   }
 
   .numpad{
@@ -481,15 +493,15 @@
   .grid{
     display:grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap:10px;
   }
 
   .key{
-    padding: 16px;
-    font-size: 18px;
+    padding:16px;
+    font-size:18px;
     background: rgba(255,255,255,0.10);
-    border: none;
-    color: #fff;
+    border:none;
+    color:#fff;
     border-radius: 12px;
     transition: transform 80ms ease, background 120ms ease;
   }
@@ -499,7 +511,7 @@
     background: rgba(255,255,255,0.18);
   }
 
-  .keyFn{ font-size: 14px; }
+  .keyFn{ font-size:14px; }
 
   .npError{
     color:#ff9999;
@@ -507,6 +519,9 @@
     margin-top:10px;
     font-weight: 700;
   }
+
+  [hidden] { display: none !important; }
+  .hidden{ display:none !important; }
 
   /* =========================
      Countdown Config Modal
@@ -607,6 +622,13 @@
     align-self: center;
   }
 
+  .fieldInput::-webkit-datetime-edit{ padding:0; text-align:center; width:100%; }
+  .fieldInput::-webkit-datetime-edit-fields-wrapper{ display:flex; justify-content:center; width:100%; }
+  .fieldInput::-webkit-datetime-edit-text,
+  .fieldInput::-webkit-datetime-edit-month-field,
+  .fieldInput::-webkit-datetime-edit-day-field,
+  .fieldInput::-webkit-datetime-edit-year-field{ text-align:center; }
+
   .btnRow{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -631,7 +653,9 @@
     text-overflow: ellipsis;
   }
 
-  #countdownOverlay[data-mode="change"] #cdSave{ grid-column: 2; }
+  #countdownOverlay[data-mode="change"] #cdSave{
+    grid-column: 2;
+  }
 
   /* =========================
      Profile Backgrounds
@@ -666,7 +690,9 @@
     background-size: cover;
     background-position: center;
   }
-  .app[class*="profile-"] .scrim{ background: rgba(0,0,0,0.45); }
+  .app[class*="profile-"] .scrim{
+    background: rgba(0,0,0,0.45);
+  }
 
   /* =========================
      Countdown Mode Backgrounds
@@ -836,24 +862,15 @@
     color: rgba(255,255,255,0.92);
   }
 
-  .flipcounter-tile.is-flipping{
-    animation: tileFlipUp 220ms ease-out;
-    transform-origin: 50% 70%;
-  }
-
-  @keyframes tileFlipUp{
-    0%   { transform: translateY(6px) rotateX(0deg); }
-    40%  { transform: translateY(0px) rotateX(-14deg); }
-    100% { transform: translateY(0px) rotateX(0deg); }
-  }
-
   /* =========================
-     One-Day / Arrival / Post-trip
+     One-Day Mode (Tomorrow!)
      ========================= */
   .app.countdown-mode .scrim { background: rgba(0,0,0,0.25); }
   .app.countdown-mode.one-day-mode .scrim { background: rgba(0,0,0,0.15); }
 
-  .app.countdown-mode.one-day-mode .flipcounter{ display: none !important; }
+  .app.countdown-mode.one-day-mode .flipcounter {
+    display: none !important;
+  }
 
   .oneDayMessage{
     position: fixed;
@@ -883,6 +900,7 @@
       0 0 22px rgba(255,255,255,0.35);
 
     transform: translate(-50%, -50%) translateY(var(--lift));
+
     opacity: 0;
     animation: oneDayInOut calc(var(--in) + var(--hold) + var(--out)) ease-in-out infinite;
     will-change: transform, opacity;
@@ -890,7 +908,9 @@
     display: none;
   }
 
-  .app.countdown-mode.one-day-mode .oneDayMessage{ display: block; }
+  .app.countdown-mode.one-day-mode .oneDayMessage{
+    display: block;
+  }
 
   .app.arrival-day-mode .oneDayMessage{
     display: block;
@@ -898,7 +918,9 @@
     opacity: 1;
   }
 
-  .app.arrival-day-mode .flipcounter{ display: none !important; }
+  .app.arrival-day-mode .flipcounter{
+    display: none !important;
+  }
 
   @keyframes oneDayInOut{
     0%{
@@ -919,29 +941,6 @@
     }
   }
 
-  .app.arrival-day-mode .bg{
-    background-image: url("assets/one-day-bkgd.webp");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-  }
-
-  .app.post-trip-mode .bg{
-    background-image: url("assets/bg-welcome-home.png");
-    background-size: cover;
-    background-position: center bottom;
-    background-repeat: no-repeat;
-  }
-
-  .app.post-trip-mode .scrim{ background: rgba(0,0,0,0.40); }
-
-  .app.post-trip-mode .oneDayMessage{
-    display: block;
-    animation: none;
-    opacity: 1;
-    font-size: clamp(54px, 3.2vw, 64px);
-  }
-
   /* =========================
      Fireworks canvas overlay
      ========================= */
@@ -955,227 +954,52 @@
     z-index: 9999;
   }
 
+  .app.arrival-day-mode .bg{
+    background-image: url("assets/one-day-bkgd.webp");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  .flipcounter-tile.is-flipping{
+    animation: tileFlipUp 220ms ease-out;
+    transform-origin: 50% 70%;
+  }
+
+  @keyframes tileFlipUp{
+    0%   { transform: translateY(6px) rotateX(0deg); }
+    40%  { transform: translateY(0px) rotateX(-14deg); }
+    100% { transform: translateY(0px) rotateX(0deg); }
+  }
+
   /* =========================
-     HOME LOCATION OVERLAY (City/State/ZIP) — STYLE ONLY
+     Post-trip mode background + banner (no animation)
      ========================= */
-  #homeLocationOverlay.overlay{ z-index: 30; }
-
-  #homeLocationOverlay .overlayCard{
-    width: min(720px, 92vw);
-    background: rgba(15,15,15,0.94);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: var(--radius-lg);
-    padding: 28px 28px 22px;
-    box-shadow: 0 18px 44px rgba(0,0,0,0.45);
-    position: relative;
+  .app.post-trip-mode .bg{
+    background-image: url("assets/bg-welcome-home.png");
+    background-size: cover;
+    background-position: center bottom;
+    background-repeat: no-repeat;
   }
 
-  #homeLocationOverlay .overlayClose{
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.20);
-    background: rgba(255,255,255,0.10);
-    color: rgba(255,255,255,0.95);
-    cursor: pointer;
-    font-size: 22px;
-    line-height: 1;
-    display: grid;
-    place-items: center;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.14),
-      0 10px 22px rgba(0,0,0,0.25);
+  .app.post-trip-mode .scrim{
+    background: rgba(0,0,0,0.40);
   }
 
-  #homeLocationOverlay .overlayClose:active{ transform: translateY(1px); }
-
-  #homeLocationOverlay .overlayTitle{
-    margin: 0 0 8px;
-    font-size: 44px;
-    font-weight: 950;
-    letter-spacing: 0.2px;
-  }
-
-  #homeLocationOverlay .overlaySub{
-    margin: 0 0 18px;
-    font-size: 22px;
-    opacity: 0.84;
-    line-height: 1.25;
-  }
-
-  #homeLocationOverlay .formRow{
-    margin-top: 10px;
-    padding: 18px 18px;
-    border-radius: var(--radius-md);
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.10);
-  }
-
-  #homeLocationOverlay .formLabel{
+  .app.post-trip-mode .oneDayMessage{
     display: block;
-    text-align: left;
-    font-size: 22px;
-    font-weight: 850;
-    opacity: 0.92;
-    margin-bottom: 10px;
+    animation: none;
+    opacity: 1;
+    font-size: clamp(54px, 3.2vw, 64px);
   }
 
-  #homeLocationOverlay input[type="text"]{
-    width: 100%;
-    height: 60px;
-    padding: 0 16px;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,0.22);
-    background: rgba(0,0,0,0.30);
-    color: rgba(255,255,255,0.95);
-    font-size: 26px;
-    font-weight: 800;
-    letter-spacing: 0.2px;
-    outline: none;
-  }
-
-  #homeLocationOverlay input[type="text"]::placeholder{
-    color: rgba(255,255,255,0.45);
-    font-weight: 700;
-  }
-
-  #homeLocationOverlay .formError,
-  #homeLocationOverlay .formStatus{
-    margin-top: 14px;
-    padding: 12px 14px;
-    border-radius: 14px;
-    font-size: 18px;
-    font-weight: 850;
-    letter-spacing: 0.02em;
-    text-align: left;
-  }
-
-  #homeLocationOverlay .formError{
-    background: rgba(255, 80, 80, 0.14);
-    border: 1px solid rgba(255, 120, 120, 0.35);
-    color: rgba(255, 210, 210, 0.95);
-  }
-
-  #homeLocationOverlay .formStatus{
-    background: rgba(120, 200, 255, 0.12);
-    border: 1px solid rgba(160, 220, 255, 0.28);
-    color: rgba(235, 250, 255, 0.95);
-  }
-
-  #homeLocationOverlay .overlayActions{
-    display: grid;
-    grid-template-columns: repeat(4, auto);
-    justify-content: center;
-    gap: 14px;
-    margin-top: 18px;
-  }
-
-  #homeLocationOverlay .overlayActions button{
-    height: 56px;
-    min-width: 140px;
-    border-radius: var(--radius-md);
-    border: 1px solid rgba(255,255,255,0.20);
-    background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.10));
-    color: rgba(255,255,255,0.96);
-    font-size: 20px;
-    font-weight: 900;
-    letter-spacing: 0.02em;
-
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.20),
-      0 10px 22px rgba(0,0,0,0.26);
-
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  #homeLocationOverlay .overlayActions button:active{
-    transform: scale(0.985);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.18),
-      0 6px 18px rgba(0,0,0,0.22);
-  }
-
-  #homeLocationOverlay .btnSecondary{ background: rgba(255,255,255,0.10); }
-
-  #homeLocationOverlay .btnDanger{
-    background: linear-gradient(180deg, rgba(255,80,80,0.22), rgba(255,80,80,0.10));
-    border-color: rgba(255,140,140,0.35);
-  }
-
-  #homeLocationOverlay .btnPrimary{
-    background: linear-gradient(180deg, rgba(30,120,255,0.55), rgba(35,95,220,0.45));
-    border-color: rgba(160, 205, 255, 0.40);
-  }
-
-  #homeLocationOverlay .overlayActions button:disabled{
-    opacity: 0.45;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
-  }
-
-  @media (max-width: 680px){
-    #homeLocationOverlay .overlayTitle{ font-size: 36px; }
-    #homeLocationOverlay .overlaySub{ font-size: 18px; }
-    #homeLocationOverlay input[type="text"]{ font-size: 22px; height: 54px; }
-    #homeLocationOverlay .overlayActions{ grid-template-columns: 1fr 1fr; }
-  }
-
-  .versionTag{
-    margin-top: 2px;
-    font-size: 14px;
-    opacity: 0.95;
-    text-transform: uppercase;
-  }
-
-  /* =========================
-     PROFILE SETTINGS (CSS-only panel + title)
-     ========================= */
-  #profileSettingsView{
-    background: rgba(74, 74, 74, 1);
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-    width: min(760px, 92vw);
-    padding: 28px 28px 24px;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .profileSettingsTitle{
-    font-family: "Waltograph", system-ui, sans-serif;
-    font-size: clamp(120px, 4.6vw, 185px);
-    font-weight: 400;
-    margin: 10px auto 6px;
-    color: rgba(255,255,255,0.92);
-    text-shadow: 0 2px 12px rgba(0,0,0,0.28);
-    white-space: nowrap;
-  }
-
-  #profileSettingsView .tagline{
-    margin: 0 0 16px 0;
-    opacity: 0.85;
-  }
-
-  #profileSettingsView .menuGrid{
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-top: 10px;
-  }
-
-  /* =========================
+  /* ==============================
      RESORT TV PAGE (base styling)
-     ========================= */
+     ============================== */
+  .page.resortTV{
+    height: 100%;
+  }
+
   #resortTV{
     position: absolute;
     inset: 0;
@@ -1183,305 +1007,122 @@
     height: 100%;
   }
 
-  .page.resortTV{ height: 100%; }
-
   .resortTV-grid{
     display: grid;
-    grid-template-columns: 1fr var(--rail-width);
+    grid-template-columns: 3fr 2fr;
     height: 100%;
   }
 
-  /* Slides span full width behind rail */
-  .slide-stage{
-    grid-column: 1 / -1;
-    grid-row: 1;
+  .resortTV-hero{
     position: relative;
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    z-index: 1;
-  }
-
-/* Slides: single source of truth (no keyframes, no duplicate definitions) */
-.slide{
-  position: absolute;
-  inset: 0;
-  width: 100%;
-
-  /* default off-screen right */
-  transform: translate3d(100%, 0, 0);
-
-  will-change: transform;
-  backface-visibility: hidden;
-
-  transition: transform 1800ms cubic-bezier(.22,.61,.36,1);
-}
-
-.slide.is-active{
-  transform: translate3d(0, 0, 0);
-}
-
-.slide.is-incoming{
-  transform: translate3d(100%, 0, 0);
-}
-
-.slide.is-outgoing{
-  transform: translate3d(-100%, 0, 0);
-}
-
-  .slide-bg{
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: 1;
-  }
-
-  .slide-content{
-    position: absolute;
-    right: calc(var(--rail-width) + 20px);
-    left: auto;
-    top: 45%;
-    transform: translateY(-50%);
-    width: min(460px, calc(100% - var(--rail-width) - 120px));
-    text-align: center;
-
-    z-index: 2;
-    padding: 18px 10px;
-
-    background: rgba(0,0,0,0.18);
-    border: 1px solid rgba(255,255,255,0.10);
-    border-radius: 18px;
-    backdrop-filter: blur(2px);
-  }
-
-  .slide-content .hero-subtitle{
-    font-size: clamp(28px, 3vw, 44px);
-    opacity: 0.9;
-    margin: 0 0 10px 0;
-  }
-
-  .slide-content .hero-time{
-    font-size: clamp(36px, 4vw, 64px);
-    font-weight: 500;
-    margin: 0;
-  }
-
-  /* Rail */
-  .resortTV-rail{
-    grid-column: 2;
-    grid-row: 1;
-    position: relative;
-    z-index: 5;
-
-    justify-content: flex-start;
-    height: 100%;
-    padding: 22px 18px;
+    padding: 48px 56px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 2px;
+    justify-content: center;
+    color: #fff;
+  }
 
-    background:
-      radial-gradient(circle at 25% 8%, rgba(120,160,255,0.22), transparent 60%),
-      linear-gradient(180deg, #8a2f45 0%, #6a2b4f 38%, #3b2a5e 68%, #1c2444 100%);
+  .resortTV-hero .hero-kicker{
+    font-size: 22px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 12px;
+  }
 
-    border-left: 1px solid rgba(255,255,255,0.14);
+  .resortTV-hero .hero-title{
+    font-size: clamp(56px, 6vw, 96px);
+    line-height: 1.05;
+    margin-bottom: 10px;
+  }
+
+  .resortTV-hero .hero-subtitle{
+    font-size: clamp(28px, 3vw, 44px);
+    opacity: 0.9;
+    margin-bottom: 18px;
+  }
+
+  .resortTV-hero .hero-time{
+    font-size: clamp(36px, 4vw, 64px);
+    font-weight: 500;
+  }
+
+  .resortTV-rail{
+    height: 100%;
+    align-self: stretch;
+
+    background: rgba(0, 0, 0, 0.62);
+    padding: 22px 22px;
+
+    display: flex;
+    flex-direction: column;
+
+    border-left: 1px solid rgba(255,255,255,0.10);
     box-shadow: -18px 0 40px rgba(0,0,0,0.25);
   }
 
-  .rail-brand{
-    width: 74%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: -18px;
-    margin-bottom: -5px;
+  .resortTV-rail .rail-card{
+    background: transparent;
+    padding: 16px 4px;
+    border-radius: 0;
   }
 
-  .rail-brandLogo{
-    width: 100%;
-    height: auto;
-    display: block;
-    opacity: 0.95;
-    padding-bottom: 2px;
+  .resortTV-rail .rail-clock{
+    background: rgba(255,255,255,0.12);
   }
 
-  .rail-divider{
-    width: 100%;
-    height: 2px;
-    background: rgba(255,255,255,0.35);
-    margin: 2px 0;
-  }
-
-  /* WEATHER */
-  .rail-weatherWrap{ width: 100%; padding: 6px 0 8px; }
-
-  .rail-metaRow{
-    width: 100%;
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    padding-bottom: 2px;
-  }
-
-  .rail-metaLeft,
-  .rail-metaRight{
-    font-size: 22px;
+  .rail-time{
+    font-size: 44px;
     font-weight: 800;
-    opacity: 0.95;
-    white-space: nowrap;
+    line-height: 1.05;
   }
 
-  .rail-thinRule{
-    width: 100%;
-    height: 2px;
-    margin: 2px 0 4px;
-    background: rgba(255,255,255,0.22);
-  }
-
-  .rail-weather2col{
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    column-gap: 16px;
-    align-items: start;
-  }
-
-  .rail-vRule{
-    width: 1px;
-    height: 100%;
-    background: rgba(255,255,255,0.18);
-    justify-self: center;
-  }
-
-  .rail-colTitle{
-    text-align: center;
-    font-size: 30px;
-    font-weight: 900;
-    opacity: 0.98;
-  }
-
-  .rail-itemLabel{
+  .rail-date{
     font-size: 18px;
-    font-weight: 800;
-    opacity: 0.92;
+    opacity: 0.9;
+    margin-top: 4px;
   }
 
-  .rail-card{
-    width: 100%;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: center;
-    border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.18);
-    background: linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.05));
-    box-shadow:
-      0 8px 14px rgba(0,0,0,0.20),
-      inset 0 1px 0 rgba(255,255,255,0.10);
-  }
-
-  .rail-weatherIcon{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 0;
-  }
-
-  .rail-weatherIcon img,
-  .rail-weatherIcon svg{
-    display: block;
-    height: 50px;
-    width: auto;
-  }
-
-  .rail-cardTemp{
-    font-size: 30px;
-    font-weight: 900;
-    line-height: 1;
-    font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum" 1;
-    padding-right: 5px;
-  }
-
-  .rail-itemWhen{
+  .rail-weather{
+    font-size: 18px;
+    opacity: 0.9;
     margin-top: 6px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 800;
-    opacity: 0.92;
-    letter-spacing: 0.02em;
-    min-height: 18px;
   }
 
-  /* HOURS */
-  .rail-sectionTitle{
-    font-size: 24px;
-    text-align: center;
-    letter-spacing: 0.16em;
+  .rail-title{
+    font-size: 14px;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     opacity: 0.95;
+    margin-bottom: 10px;
   }
 
-  .rail-hoursList{
-    margin: 8px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .rail-hoursItem{
-    display: grid;
-    grid-template-columns: 30px 1fr;
-    gap: 12px;
-    align-items: start;
-  }
-
-  .rail-hoursIcon{
-    font-size: 24px;
-    opacity: 0.95;
-    margin-top: 2px;
-    margin-right: 4px;
-  }
-
-  .rail-hoursName{
-    font-size: 20px;
-    font-weight: 800;
-    line-height: 1.15;
-  }
-
-  .rail-hoursTime{
+  .rail-row{
     font-size: 18px;
-    opacity: 0.92;
-    margin-top: 3px;
+    line-height: 1.35;
+    margin-bottom: 8px;
   }
 
-  .rail-typicalNote{
-    margin-bottom: 2px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    opacity: 0.65;
-    pointer-events: none;
+  .rail-row:last-child{
+    margin-bottom: 0;
   }
-
 }
 
 /* =========================
-   VIEWS
+   VIEWS (wins by design, no location fighting)
    ========================= */
 @layer views {
 
-  .app.view-disneyHome .topbar{ display: none; }
-
-  .app.view-disneyHome .bg{ opacity: 0; }
+  /* ResortTV view:
+     - remove header space entirely
+     - let ResortTV grid fill screen
+  */
+  .app.view-disneyHome .topbar{
+    display: none;
+  }
 
   .app.view-disneyHome .center{
-    height: 100vh;
+    height: 100vh;          /* full screen since topbar is hidden */
     padding-top: 0;
     margin-top: 0;
     align-items: stretch;
@@ -1489,12 +1130,36 @@
     text-align: left;
   }
 
-  .app.view-disneyHome .resortTV-grid{ height: 100%; }
-
-  /* Reserve right rail space for the ticker */
-  .app.view-disneyHome{
-    --footer-safe-right: calc(var(--rail-width) + 16px);
+  .app.view-disneyHome #resortTV{
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 
-  .app.view-disneyHome .scrim{ background: transparent; }
+  .app.view-disneyHome .resortTV-grid{
+    height: 100%;
+  }
+
+  .app.view-disneyHome .resortTV-rail{
+    height: 100%;
+    align-self: stretch;
+  }
+
+  /* Optional: keep your rail clock slightly calmer */
+  .app.view-disneyHome .resortTV-rail .rail-clock{
+    background: rgba(255,255,255,0.10);
+  }
 }
+
+
+/* ResortTV: allow JS to swap backgrounds cleanly */
+.app.view-disneyHome .bg{
+  /* JS will set --resort-bg to url("...") */
+  background-image: var(--resort-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: opacity 300ms ease;
+}
+
+
