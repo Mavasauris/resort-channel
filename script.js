@@ -3,7 +3,7 @@
 /***********************
  *  CONFIG
  ***********************/
-const PASSWORD = "123";
+const PASSWORD = "5683";
 const PIN_LEN = PASSWORD.length;
 const POST_TRIP_START_DAYS = 2;     // show post-trip starting 2 days after arrival day
 const POST_TRIP_KEEP_DAYS = 30;     // keep arrival date for up to 30 days, then wipe
@@ -94,7 +94,7 @@ const PROFILES = {
   mckenzie: { name: "Verhulst Family", greetingName: "McKenzie", greeting: "Welcome Home, McKenzie!", tagline: "Adventure starts today." },
   kaylia:   { name: "Verhulst Family", greetingName: "Kaylia", greeting: "Welcome Home, Kaylia!", tagline: "Frogs, fun, and fairy tales." },
   mira:     { name: "Mira & Baby Hazel Family", greetingName: "Mira & Baby Hazel", greeting: "Welcome Home, Mira & Baby Hazel!", tagline: "Wonder everywhere." },
-  resort:   { name: "Resort Test", greetingName: "Resort", greeting: "Resort Test", tagline: "Testing environment." }
+  tisha:    { name: "Rios Family", greetingName: "Tisha and Christian", greeting: "Welcome Home, Tisha and Christian!", tagline: "Villainy never looked so relaxing." }
 };
 
 /***********************
@@ -400,7 +400,7 @@ const viewDefs = {
 
       if (UI.greeting) {
         UI.greeting.textContent =
-          (state.activeProfileKey === "resort")
+          (state.activeProfileKey === "tisha")
             ? (p.greeting || "")
             : getTimeGreeting(p.greetingName || p.name);
       }
