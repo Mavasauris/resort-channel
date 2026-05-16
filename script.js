@@ -84,7 +84,7 @@ const PROFILES = {
   mckenzie: { name: "Verhulst Family", greetingName: "McKenzie", greeting: "Welcome Home, McKenzie!", tagline: "Adventure starts today." },
   kaylia:   { name: "Verhulst Family", greetingName: "Kaylia", greeting: "Welcome Home, Kaylia!", tagline: "Frogs, fun, and fairy tales." },
   mira:     { name: "Mira & Baby Hazel Family", greetingName: "Mira & Baby Hazel", greeting: "Welcome Home, Mira & Baby Hazel!", tagline: "Wonder everywhere." },
-  resort:   { name: "Rios Family", greetingName: "Tisha and Christian", greeting: "Welcome Home, Tisha and Christian!", tagline: "Villainy never looked so relaxing." }
+  tisha:   { name: "Rios Family", greetingName: "Tisha & Christian", greeting: "Welcome Home, Tisha and Christian!", tagline: "Villainy never looked so relaxing." }
 };
 
 /***********************
