@@ -289,7 +289,7 @@ const viewDefs = {
 
       if (UI.greeting) {
         UI.greeting.textContent =
-          (state.activeProfileKey === "resort")
+          (state.activeProfileKey === "tisha")
             ? (p.greeting || "")
             : getTimeGreeting(p.greetingName || p.name);
       }

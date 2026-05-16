@@ -685,8 +685,8 @@
     background-size: cover;
     background-position: center;
   }
-  .app.profile-resort .bg{
-    background-image: url("assets/bg-resort.jpg");
+  .app.profile-tisha .bg{
+    background-image: url("assets/bg-resort.jpg"); /* rename to bg-tisha.jpg later if you add a Tisha-specific image */
     background-size: cover;
     background-position: center;
   }
