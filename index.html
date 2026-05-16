@@ -1,3 +1,4 @@
+﻿<!-- index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -20,6 +21,7 @@
     <div class="topLeft">
       <div class="pageText">
         <div id="resortName" class="resortName">Main Home</div>
+        <div id="versionTag" class="versionTag">v2.#.#</div>
       </div>
     </div>
 
@@ -44,37 +46,39 @@
   <section class="center" id="pageHost">
 
     <!-- SPLASH (LOCK PAGE) -->
-<div id="splash">
+    <div id="splash">
+      <h1 class="greeting">Welcome Home</h1>
+      <p class="tagline" id="splashTagline">Tap Unlock to Choose a Profile</p>
 
-    <h1 class="greeting">Welcome Home</h1>
-    <p class="tagline" id="splashTagline">Tap Unlock to Choose a Profile</p>
+      <div class="lockBox" id="lockBox">
+        <button id="unlock" type="button">Unlock</button>
+        <div id="error">Incorrect PIN</div>
+      </div>
 
-
-  <div class="lockBox" id="lockBox">
-    <button id="unlock" type="button">Unlock</button>
-    <div id="error">Incorrect PIN</div>
-  </div>
-</div>
-
+      <div class="menuGrid menuGrid--welcome">
+        <button class="menuBtn" data-profile="lori" type="button">Lori &amp; Dave</button>
+        <button class="menuBtn" data-profile="verhulst" type="button">Krista &amp; Mike</button>
+        <button class="menuBtn" data-profile="mira" type="button">Mira &amp; Baby Hazel</button>
+        <button class="menuBtn" data-profile="mckenzie" type="button">McKenzie</button>
+        <button class="menuBtn" data-profile="kaylia" type="button">Kaylia</button>
+        <button class="menuBtn" data-profile="resort" type="button">Resort Test</button>
+      </div>
+    </div>
 
     <!-- CHOOSER (PROFILE SELECT PAGE) -->
- <div id="chooser" hidden>
+    <div id="chooser" hidden>
+      <h1 class="greeting">Welcome Home</h1>
+      <p class="tagline" id="chooserTagline">Choose a Profile</p>
 
-    <h1 class="greeting">Welcome Home</h1>
-    <p class="tagline" id="chooserTagline">Choose a Profile</p>
-
-
-
-
-        <div class="menuGrid menuGrid--welcome">
-          <button class="menuBtn" data-profile="lori" type="button">Lori &amp; Dave</button>
-          <button class="menuBtn" data-profile="verhulst" type="button">Krista &amp; Mike</button>
-          <button class="menuBtn" data-profile="mira" type="button">Mira &amp; Baby Hazel</button>
-          <button class="menuBtn" data-profile="mckenzie" type="button">McKenzie</button>
-          <button class="menuBtn" data-profile="kaylia" type="button">Kaylia</button>
-          <button class="menuBtn" data-profile="tisha" type="button">Tisha &amp; Christian</button>
-        </div>
+      <div class="menuGrid menuGrid--welcome">
+        <button class="menuBtn" data-profile="lori" type="button">Lori &amp; Dave</button>
+        <button class="menuBtn" data-profile="verhulst" type="button">Krista &amp; Mike</button>
+        <button class="menuBtn" data-profile="mira" type="button">Mira &amp; Baby Hazel</button>
+        <button class="menuBtn" data-profile="mckenzie" type="button">McKenzie</button>
+        <button class="menuBtn" data-profile="kaylia" type="button">Kaylia</button>
+        <button class="menuBtn" data-profile="resort" type="button">Resort Test</button>
       </div>
+    </div>
 
     <!-- PAGE: PROFILE -->
     <section id="profileView" class="page" data-page="profile" hidden>
@@ -83,16 +87,38 @@
 
       <div id="profileActions" class="menuGrid">
         <button class="menuBtn" data-page="disneyHome" type="button">Disney Resort Home</button>
-        <button class="menuBtn" data-page="countdownConfig" type="button">Countdown Config</button>
         <button class="menuBtn" data-page="countdownDisplay" type="button">Countdown Display</button>
         <button class="menuBtn" data-page="disneyPictures" type="button">Disney Pictures</button>
+        <button class="menuBtn" data-page="profileSettings" type="button">Profile Settings</button>
+      </div>
+    </section>
+
+    <!-- PAGE: PROFILE SETTINGS -->
+    <section id="profileSettingsView" class="page" data-page="profileSettings" hidden>
+      <h1 class="profileSettingsTitle">Profile Settings</h1>
+      <p class="tagline">Settings Saved per Profile.</p>
+
+      <div class="menuGrid" id="profileSettingsActions">
+        <button class="menuBtn" data-setting="arrivalDate" type="button">
+          Disney Arrival Date:
+          <span id="arrivalDateSettingValue" class="settingValue">Not set</span>
+        </button>
+
+        <button class="menuBtn" data-setting="homeLocation" type="button">
+          Home Location (Weather):
+          <span id="homeLocationSettingValue" class="settingValue">Not set</span>
+        </button>
+
+        <button class="menuBtn" data-setting="toggleCountdownOnTV" type="button">
+          Countdown on Resort TV:
+          <span id="countdownOnTvState">Off</span>
+        </button>
       </div>
     </section>
 
     <!-- PAGE: COUNTDOWN DISPLAY -->
     <section id="countdownSection" class="page countdown-section" data-page="countdownDisplay" hidden aria-label="Disney Arrival Countdown">
-     <div id="oneDayMessage" class="oneDayMessage">
-
+      <div id="oneDayMessage" class="oneDayMessage">
         <div id="oneDayText" class="oneDayText">1 day till Disney</div>
       </div>
 
@@ -127,177 +153,240 @@
       </div>
     </section>
 
+    <!-- ======================
+         PAGE: DISNEY RESORT TV
+         ====================== -->
+    <section
+      id="resortTV"
+      class="page resortTV"
+      data-page="disneyHome"
+      hidden
+      aria-label="Disney Resort Channel"
+    >
+      <div class="resortTV-grid">
 
+        <!-- FULL-WIDTH stage behind the rail -->
+        <div id="slideStage" class="slide-stage" aria-hidden="true"></div>
 
-<!-- ======================
-     PAGE: DISNEY RESORT TV
-     Mimics official resort TV info screens
-     ====================== -->
-<section
-  id="resortTV"
-  class="page resortTV"
-  data-page="disneyHome"
-  hidden
-  aria-label="Disney Resort Channel"
->
+        <!-- RIGHT: INFO RAIL -->
+        <aside class="resortTV-rail" aria-label="Resort TV Info Rail">
 
-  <!--
-    MAIN GRID
-    Left = Hero visual (rotates content)
-    Right = Info rail (clock, hours, tips)
-  -->
-  <div class="resortTV-grid">
+          <div class="rail-brand">
+            <img
+              class="rail-brandLogo"
+              src="assets/wdw-badge.png"
+              alt="Walt Disney World badge"
+              draggable="false"
+            />
+          </div>
+
+          <div class="rail-divider"></div>
+
+          <!-- WEATHER: Home + Disney (Now / Later) -->
+          <section class="rail-weatherWrap" aria-label="Weather">
+
+            <!-- top line: date left, time right -->
+            <div class="rail-metaRow">
+              <div class="rail-metaLeft" id="railDay">?</div>
+              <div class="rail-metaRight" id="railTimeBig">?</div>
+            </div>
+
+            <div class="rail-thinRule"></div>
+
+            <div class="rail-weather2col">
+
+              <!-- HOME -->
+              <div class="rail-col">
+                <div class="rail-colTitle">HOME</div>
+
+                <div class="rail-item">
+                  <div class="rail-itemLabel">Now</div>
+                  <div class="rail-card">
+                    <span class="rail-weatherIcon" id="homeNowIcon">?</span>
+                    <span class="rail-cardTemp" id="homeNowTemp">?</span>
+                  </div>
+                </div>
+
+                <div class="rail-item">
+                  <div class="rail-itemLabel">Later</div>
+                  <div class="rail-card">
+                    <span class="rail-weatherIcon" id="homeLaterIcon">?</span>
+                    <span class="rail-cardTemp" id="homeLaterTemp">?</span>
+                  </div>
+                  <div class="rail-itemWhen" id="homeLaterWhen"></div>
+                </div>
+              </div>
+
+              <div class="rail-vRule" aria-hidden="true"></div>
+
+              <!-- DISNEY -->
+              <div class="rail-col">
+                <div class="rail-colTitle">DISNEY</div>
+
+                <div class="rail-item">
+                  <div class="rail-itemLabel">Now</div>
+                  <div class="rail-card">
+                    <span class="rail-weatherIcon" id="disneyNowIcon">?</span>
+                    <span class="rail-cardTemp" id="disneyNowTemp">?</span>
+                  </div>
+                </div>
+
+                <div class="rail-item">
+                  <div class="rail-itemLabel">Later</div>
+                  <div class="rail-card">
+                    <span class="rail-weatherIcon" id="disneyLaterIcon">?</span>
+                    <span class="rail-cardTemp" id="disneyLaterTemp">?</span>
+                  </div>
+                  <div class="rail-itemWhen" id="disneyLaterWhen"></div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <div class="rail-divider"></div>
+
+          <!-- PARK HOURS -->
+          <div class="rail-section">
+            <div class="rail-sectionTitle">Park Hours</div>
+            <div class="rail-divider"></div>
+
+            <div class="rail-hoursList" id="railHoursList">
+              <div class="rail-hoursItem">
+                <span class="rail-hoursIcon">🏰</span>
+                <div class="rail-hoursText">
+                  <div class="rail-hoursName">Magic Kingdom</div>
+                  <div class="rail-hoursTime">9:00 AM – 9:00 PM *</div>
+                </div>
+              </div>
+
+              <div class="rail-hoursItem">
+                <span class="rail-hoursIcon">🌐</span>
+                <div class="rail-hoursText">
+                  <div class="rail-hoursName">Epcot</div>
+                  <div class="rail-hoursTime">11:00 AM – 10:00 PM *</div>
+                </div>
+              </div>
+
+              <div class="rail-hoursItem">
+                <span class="rail-hoursIcon">🎬</span>
+                <div class="rail-hoursText">
+                  <div class="rail-hoursName">Disney’s Hollywood Studios</div>
+                  <div class="rail-hoursTime">9:00 AM – 9:00 PM *</div>
+                </div>
+              </div>
+
+              <div class="rail-hoursItem">
+                <span class="rail-hoursIcon">🦁</span>
+                <div class="rail-hoursText">
+                  <div class="rail-hoursName">Disney’s Animal Kingdom</div>
+                  <div class="rail-hoursTime">8:00 AM – 7:00 PM *</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="parkHoursNote" class="rail-typicalNote">
+              * typical hours
+            </div>
+          </div>
+
+        </aside>
+      </div>
+    </section>
 
     <!-- ======================
-         LEFT: HERO PANEL
-         Rotates park / resort highlights
+         OVERLAYS (NOT PAGES)
          ====================== -->
-    <div class="resortTV-hero">
 
-      <!-- Small context label -->
-      <div class="hero-kicker">
-        Next Disney Trip
-      </div>
+    <!-- COUNTDOWN CONFIG OVERLAY -->
+    <div id="countdownOverlay" class="cdOverlay" aria-hidden="true" hidden>
+      <div class="cdCard" role="dialog" aria-modal="true" aria-label="Countdown Config">
+        <div class="cdHeader">
+          <div class="cdTitle">Date of Arrival at Disney</div>
+          <button class="cdClose" type="button">✕</button>
+        </div>
 
-      <!-- Primary rotating title (park / resort name) -->
-      <div class="hero-title" id="heroTitle">
-        Magic Kingdom
-      </div>
+        <div class="fieldRow">
+          <label class="fieldLabel" for="cdDate">Select arrival date</label>
+          <input id="cdDate" class="fieldInput" type="date" inputmode="none" />
+        </div>
 
-      <!-- Secondary rotating line (event / highlight) -->
-      <div class="hero-subtitle" id="heroSubtitle">
-        Disney Enchantment
-      </div>
+        <div id="cdError" class="npError" hidden>
+          Please choose a date that is today or later.
+        </div>
 
-      <!-- Time-based or countdown callout -->
-      <div class="hero-time" id="heroTime">
-        8:15 PM
-      </div>
-
-    </div>
-    <!-- END HERO PANEL -->
-
-
-    <!-- ======================
-         RIGHT: INFO RAIL
-         Static, calm, TV-style info
-         ====================== -->
-    <aside class="resortTV-rail">
-
-      <!-- CLOCK / DATE / WEATHER -->
-      <div class="rail-card rail-clock">
-        <div class="rail-time" id="railTime">11:03 AM</div>
-        <div class="rail-date" id="railDate">Sat, Dec 17</div>
-        <div class="rail-weather" id="railWeather">
-          64°F · Sunny
+        <div class="btnRow">
+          <button id="cdClear" class="cdBtn" type="button">Clear date</button>
+          <button id="cdSave" class="cdBtn" type="button">Save</button>
         </div>
       </div>
+    </div>
 
-      <!-- PARK HOURS -->
-      <div class="rail-card">
-        <div class="rail-title">Park Hours</div>
-        <div class="rail-row">Magic Kingdom · 9:00 AM – 10:00 PM</div>
-        <div class="rail-row">EPCOT · 9:00 AM – 9:00 PM</div>
+    <!-- NUMPAD OVERLAY -->
+    <div id="numpadOverlay" class="overlay" hidden>
+      <div class="numpad">
+        <div class="numpadTop">
+          <div class="numpadTitle">Enter PIN</div>
+          <button id="npClose" class="npClose" type="button">✕</button>
+        </div>
+
+        <div id="npDots" class="dots">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        </div>
+
+        <div class="grid">
+          <button class="key" data-k="1" type="button">1</button>
+          <button class="key" data-k="2" type="button">2</button>
+          <button class="key" data-k="3" type="button">3</button>
+          <button class="key" data-k="4" type="button">4</button>
+          <button class="key" data-k="5" type="button">5</button>
+          <button class="key" data-k="6" type="button">6</button>
+          <button class="key" data-k="7" type="button">7</button>
+          <button class="key" data-k="8" type="button">8</button>
+          <button class="key" data-k="9" type="button">9</button>
+
+          <button class="key keyFn" data-k="clear" type="button">Clear</button>
+          <button class="key" data-k="0" type="button">0</button>
+          <button class="key keyFn" data-k="back" type="button">Back</button>
+        </div>
+
+        <div id="npError" class="npError" hidden>Incorrect PIN</div>
       </div>
+    </div>
 
-      <!-- TRANSPORTATION -->
-      <div class="rail-card">
-        <div class="rail-title">Transportation</div>
-        <div class="rail-row">Bus · Typical 15–20 min</div>
-        <div class="rail-row">Monorail · Operating</div>
-      </div>
+    <!-- HOME LOCATION OVERLAY -->
+    <div id="homeLocationOverlay" class="overlay" hidden aria-hidden="true" inert>
+      <div class="overlayCard">
+        <button class="overlayClose" id="homeLocClose" type="button" aria-label="Close">✕</button>
 
-      <!-- TODAY'S TIP / RESORT MESSAGE -->
-      <div class="rail-card rail-tip">
-        <div class="rail-title">Today’s Tip</div>
-        <div class="rail-row">
-          Arrive early for shorter waits.
+        <h2 class="overlayTitle">Home Location</h2>
+        <p class="overlaySub">Enter City, State or ZIP. Tap Search to validate.</p>
+
+        <div class="formRow">
+          <label class="formLabel" for="homeLocQuery">City, State or ZIP</label>
+          <input id="homeLocQuery" type="text" placeholder="e.g., Woodbury, MN or 55125" />
+        </div>
+
+        <div id="homeLocError" class="formError" hidden></div>
+        <div id="homeLocStatus" class="formStatus" hidden></div>
+
+        <div class="overlayActions">
+          <button id="homeLocClear" class="btnDanger" type="button">Clear</button>
+          <button id="homeLocSearch" class="btnSecondary" type="button">Search</button>
+          <button id="homeLocSave" class="btnPrimary" type="button" disabled>Save</button>
         </div>
       </div>
-
-    </aside>
-    <!-- END INFO RAIL -->
-
-  </div>
-  <!-- END GRID -->
-
-</section>
-<!-- ===== END RESORT TV PAGE ===== -->
-
-
-
-  <!-- ===== END PAGES ===== -->
-
-
-  </section>
-
-  <!-- ======================
-       OVERLAYS (NOT PAGES)
-       ====================== -->
-
-  <!-- COUNTDOWN CONFIG OVERLAY -->
-  <div id="countdownOverlay" class="cdOverlay" aria-hidden="true" hidden>
-    <div class="cdCard" role="dialog" aria-modal="true" aria-label="Countdown Config">
-      <div class="cdHeader">
-        <div class="cdTitle">Date of Arrival at Disney</div>
-        <button class="cdClose" type="button">✕</button>
-      </div>
-
-      <div class="fieldRow">
-        <label class="fieldLabel" for="cdDate">Select arrival date</label>
-        <input id="cdDate" class="fieldInput" type="date" inputmode="none" />
-      </div>
-
-      <div id="cdError" class="npError" hidden>
-        Please choose a date that is today or later.
-      </div>
-
-      <div class="btnRow">
-        <button id="cdClear" class="cdBtn" type="button">Clear date</button>
-        <button id="cdSave" class="cdBtn" type="button">Save</button>
-      </div>
     </div>
-  </div>
 
-  <!-- NUMPAD OVERLAY -->
-  <div id="numpadOverlay" class="overlay" hidden>
-    <div class="numpad">
-      <div class="numpadTop">
-        <div class="numpadTitle">Enter PIN</div>
-        <button id="npClose" class="npClose" type="button">✕</button>
+    <!-- FOOTER -->
+    <footer class="bottombar">
+      <div class="ticker">
+        <span id="message"></span>
       </div>
+    </footer>
 
-      <div id="npDots" class="dots">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-      </div>
-
-      <div class="grid">
-        <button class="key" data-k="1" type="button">1</button>
-        <button class="key" data-k="2" type="button">2</button>
-        <button class="key" data-k="3" type="button">3</button>
-        <button class="key" data-k="4" type="button">4</button>
-        <button class="key" data-k="5" type="button">5</button>
-        <button class="key" data-k="6" type="button">6</button>
-        <button class="key" data-k="7" type="button">7</button>
-        <button class="key" data-k="8" type="button">8</button>
-        <button class="key" data-k="9" type="button">9</button>
-
-        <button class="key keyFn" data-k="clear" type="button">Clear</button>
-        <button class="key" data-k="0" type="button">0</button>
-        <button class="key keyFn" data-k="back" type="button">Back</button>
-      </div>
-
-      <div id="npError" class="npError" hidden>Incorrect PIN</div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer class="bottombar">
-    <div class="ticker">
-      <span id="message"></span>
-    </div>
-  </footer>
+  </section><!-- ✅ IMPORTANT: keep overlays/footer INSIDE #pageHost -->
 
   <!-- HOME BUTTON -->
   <button id="backBtn" class="backBtn" type="button" aria-label="Home">
@@ -306,8 +395,10 @@
 
 </main>
 
+
+
+</main>
+
 <script src="script.js"></script>
-
-
 </body>
 </html>
